@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ANSCER · Welcome / ようこそ</title>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@200;300;400;500&family=Shippori+Mincho:wght@400;500;600&display=swap" rel="stylesheet">
+<title>ANSCER · Welcome </title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@200;300;400;500&family=Shippori+Mincho:wght@400;500;600&family=Noto+Serif+Kannada:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
   :root {
@@ -58,23 +58,25 @@
   .welcome .layer::after { background:linear-gradient(90deg, var(--gold), transparent); }
   .welcome .en-txt { font-family:'Space Grotesk',sans-serif; font-size:58px; font-weight:500;
     letter-spacing:0.40em; text-transform:uppercase; color:var(--gold); }
-  .welcome .jp-txt { font-family:'Shippori Mincho',serif; font-size:80px; font-weight:500;
-    letter-spacing:0.26em; color:var(--gold); }
+  .welcome .jp-txt { font-family:'Noto Serif Kannada',serif; font-size:72px; font-weight:500;
+    letter-spacing:0.10em; color:var(--gold); }
 
   /* NAMES — vertical stacked list (one guest per row, name on one line) */
   .names { display:flex; flex-direction:column; align-items:center;
-    width:100%; gap:clamp(18px, 2.4vh, 40px); }
+    width:100%; gap:clamp(10px, 1.6vh, 26px); }
 
   .guest { position:relative; display:grid;
     grid-template-columns:minmax(0,1fr) auto; align-items:baseline;
     column-gap:clamp(20px,3vw,56px); width:100%; max-width:1400px;
-    padding-bottom:clamp(14px,1.8vh,28px); opacity:0;
+    padding-bottom:clamp(10px,1.4vh,22px); opacity:0;
     border-bottom:1px solid rgba(203,183,132,0.16);
     animation:riseIn 1s cubic-bezier(.2,.8,.2,1) both; }
   .guest:last-child { border-bottom:none; }
-  .guest:nth-child(1){ animation-delay:0.18s; }
-  .guest:nth-child(2){ animation-delay:0.34s; }
-  .guest:nth-child(3){ animation-delay:0.50s; }
+  .guest:nth-child(1){ animation-delay:0.16s; }
+  .guest:nth-child(2){ animation-delay:0.28s; }
+  .guest:nth-child(3){ animation-delay:0.40s; }
+  .guest:nth-child(4){ animation-delay:0.52s; }
+  .guest:nth-child(5){ animation-delay:0.64s; }
   @keyframes riseIn { from{opacity:0; transform:translateY(28px);} to{opacity:1; transform:none;} }
 
   .g-name { font-family:'Space Grotesk',sans-serif; font-weight:700;
@@ -95,6 +97,8 @@
   .names { --name-size:clamp(40px, 6vw, 92px); }
   .names[data-cols="2"] { --name-size:clamp(38px, 5vw, 80px); }
   .names[data-cols="3"] { --name-size:clamp(32px, 4vw, 64px); }
+  .names[data-cols="4"] { --name-size:clamp(28px, 3.3vw, 52px); }
+  .names[data-cols="5"] { --name-size:clamp(24px, 2.8vw, 44px); }
 
   .divider { width:140px; height:1px; margin-top:46px;
     background:linear-gradient(90deg, transparent, var(--aka) 50%, transparent);
@@ -135,7 +139,7 @@
   <main class="center">
     <div class="welcome">
       <span class="layer en show"><span class="en-txt">Welcome</span></span>
-      <span class="layer jp"><span class="jp-txt">ようこそ</span></span>
+      <span class="layer jp"><span class="jp-txt">ನಮಸ್ಕಾರ</span></span>
     </div>
     <div class="names" id="names"></div>
     <div class="divider"></div>
@@ -148,16 +152,18 @@
 
 <script>
   /* ═══════════════════════════════════════════════════════════
-     EDIT YOUR GUESTS HERE — English only. Maximum 3 shown.
+     EDIT YOUR GUESTS HERE — English only. Maximum 5 shown.
      ═══════════════════════════════════════════════════════════ */
   const visitors = [
-    { name:"Mr. Fuminori Miyazawa", title:"Robotics Business Unit Manager", company:"ASPINA Corporation, Japan" },
-    { name:"Mr. Hiroyuki Nakamura", title:"Chief, Engineering Department",  company:"ASPINA Corporation, Japan" },
- /*   { name:"Mr. M. Nageswara Rao",  title:"Chief Executive Officer",        company:"ASPINA India" }, */
+    { name:"Vivek TG",         title:"Project Manager",                  company:"Jiva Innovative Automations" },
+    { name:"Srinidhi Tejas",   title:"Senior Sales Engineer",            company:"Jiva Innovative Automations" },
+    { name:"Nisarga R",        title:"Technical Sales & Application",     company:"Jiva Innovative Automations" },
+    { name:"Umashankar J Rao", title:"Sr. Manager - Business Support",    company:"Jiva Innovative Automations" },
+    { name:"K N Prasad",       title:"Managing Director",                 company:"Medhini Engineering Services" },
   ];
   /* ═══════════════════════════════════════════════════════════ */
 
-  const shown = visitors.slice(0, 3);
+  const shown = visitors.slice(0, 5);
   const names = document.getElementById('names');
   names.setAttribute('data-cols', shown.length);
 
