@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ANSCER · Welcome </title>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@200;300;400;500&family=Shippori+Mincho:wght@400;500;600&family=Noto+Serif+Kannada:wght@400;500;600&display=swap" rel="stylesheet">
+<title>ANSCER · Welcome / ようこそ</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@200;300;400;500&family=Shippori+Mincho:wght@400;500;600&family=Noto+Serif+Kannada:wght@400;500;600&family=Noto+Serif+Tamil:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
   :root {
@@ -58,8 +58,8 @@
   .welcome .layer::after { background:linear-gradient(90deg, var(--gold), transparent); }
   .welcome .en-txt { font-family:'Space Grotesk',sans-serif; font-size:58px; font-weight:500;
     letter-spacing:0.40em; text-transform:uppercase; color:var(--gold); }
-  .welcome .jp-txt { font-family:'Noto Serif Kannada',serif; font-size:72px; font-weight:500;
-    letter-spacing:0.10em; color:var(--gold); }
+  .welcome .jp-txt { font-family:'Noto Serif Tamil',serif; font-size:66px; font-weight:500;
+    letter-spacing:0.08em; color:var(--gold); }
 
   /* NAMES — vertical stacked list (one guest per row, name on one line) */
   .names { display:flex; flex-direction:column; align-items:center;
@@ -95,7 +95,7 @@
 
   /* name size by guest count — single line, scales to fit the wide row */
   .names { --name-size:clamp(40px, 6vw, 92px); }
-  .names[data-cols="2"] { --name-size:clamp(38px, 5vw, 80px); }
+  .names[data-cols="2"] { --name-size:clamp(48px, 6.5vw, 104px); }
   .names[data-cols="3"] { --name-size:clamp(32px, 4vw, 64px); }
   .names[data-cols="4"] { --name-size:clamp(28px, 3.3vw, 52px); }
   .names[data-cols="5"] { --name-size:clamp(24px, 2.8vw, 44px); }
@@ -139,7 +139,7 @@
   <main class="center">
     <div class="welcome">
       <span class="layer en show"><span class="en-txt">Welcome</span></span>
-      <span class="layer jp"><span class="jp-txt">ನಮಸ್ಕಾರ</span></span>
+      <span class="layer jp"><span class="jp-txt">வணக்கம்</span></span>
     </div>
     <div class="names" id="names"></div>
     <div class="divider"></div>
@@ -155,11 +155,8 @@
      EDIT YOUR GUESTS HERE — English only. Maximum 5 shown.
      ═══════════════════════════════════════════════════════════ */
   const visitors = [
-    { name:"K N Prasad",       title:"Managing Director",                 company:"Medhini Engineering Services" },
-    { name:"Umashankar J Rao", title:"Sr. Manager - Business Support",    company:"Jiva Innovative Automations" },
-    { name:"Srinidhi Tejas",   title:"Senior Sales Engineer",            company:"Jiva Innovative Automations" },
-    { name:"Vivek TG",         title:"Project Manager",                  company:"Jiva Innovative Automations" },
-    { name:"Nisarga R",        title:"Technical Sales & Application",     company:"Jiva Innovative Automations" },
+    { name:"Rahul Bala",   title:"", company:"BASE Automation" },
+    { name:"Gopinath PS",  title:"", company:"BASE Automation" },
   ];
   /* ═══════════════════════════════════════════════════════════ */
 
