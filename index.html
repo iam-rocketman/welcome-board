@@ -88,11 +88,11 @@
     color:var(--soft); letter-spacing:0.03em; line-height:1.3; margin-top:4px; }
 
   /* sizes by guest count (grouped = names only, so they can be larger) */
-  .names[data-cols="1"] .g-name { font-size:112px; }
-  .names[data-cols="2"] .g-name { font-size:92px; }
-  .names[data-cols="3"] .g-name { font-size:76px; }
-  .names[data-cols="4"] .g-name { font-size:66px; }
-  .names[data-cols="5"] .g-name { font-size:56px; }
+  .names[data-cols="1"] .g-name { font-size:101px; }
+  .names[data-cols="2"] .g-name { font-size:83px; }
+  .names[data-cols="3"] .g-name { font-size:68px; }
+  .names[data-cols="4"] .g-name { font-size:59px; }
+  .names[data-cols="5"] .g-name { font-size:50px; }
   .names[data-grouped="true"] .guest { margin-bottom:20px; }
 
   /* when NOT grouped, greeting shows generic + we still lead with names */
@@ -279,13 +279,48 @@
     });
   }
 
-  // shrink any name that would overflow (pixel-measured; safe on old TV browsers)
+  // Fit names both by WIDTH (no single name overflows) and by HEIGHT
+  // (the whole name list always stays above the scrolling ticker, with a gap).
+  // If there are many names, they shrink uniformly until they fit; never below a floor.
+  var NAME_MIN = 30;     // smallest the names will ever shrink to (px)
+  var SAFE_GAP = 24;     // guaranteed clear space above the ticker (px)
+
   function fitNames(){
-    const maxW = document.querySelector('.screen').clientWidth - 128;
+    var screen = document.querySelector('.screen');
+    var center = document.querySelector('.center');
+    var footer = document.querySelector('.footer');
+    var nameEls = document.querySelectorAll('.g-name');
+
+    // 1) WIDTH fit — no single name wider than the screen
+    var maxW = screen.clientWidth - 128;
     document.querySelectorAll('.g-name, .greeting-company').forEach(function(el){
+      el.style.fontSize = '';               // reset to CSS default first
       var size = parseFloat(getComputedStyle(el).fontSize), guard=0;
-      while (el.scrollWidth > maxW && size > 24 && guard < 400){ size-=2; guard++; el.style.fontSize=size+'px'; }
+      while (el.scrollWidth > maxW && size > NAME_MIN && guard < 400){ size-=2; guard++; el.style.fontSize=size+'px'; }
     });
+
+    // 2) HEIGHT fit — shrink names uniformly until the center block clears the ticker
+    // available vertical space for .center content = from its top to the footer top, minus gap
+    var footerTop = footer.getBoundingClientRect().top;
+    var centerTop = center.getBoundingClientRect().top;
+    var available = footerTop - centerTop - SAFE_GAP;
+
+    var guard = 0;
+    while (center.scrollHeight > available && guard < 200){
+      var shrunk = false;
+      nameEls.forEach(function(el){
+        var size = parseFloat(getComputedStyle(el).fontSize);
+        if (size > NAME_MIN){ el.style.fontSize = (size - 2) + 'px'; shrunk = true; }
+      });
+      // also tighten the row spacing as we go
+      var gaps = document.querySelectorAll('.names .guest');
+      gaps.forEach(function(g){
+        var mb = parseFloat(getComputedStyle(g).marginBottom);
+        if (mb > 6) g.style.marginBottom = (mb - 1) + 'px';
+      });
+      if (!shrunk) break;   // hit the floor; stop
+      guard++;
+    }
   }
   window.addEventListener('load', fitNames);
   window.addEventListener('resize', fitNames);
