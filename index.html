@@ -16,7 +16,7 @@
 
     /* ═══ ROBOT + ROPE CONTROLS — change these numbers to adjust ═══ */
     --robot-size: 64px;      /* robot height. bigger = larger robot */
-    --robot-lift: -7px;      /* moves ROBOT up/down. positive = UP, negative = DOWN */
+    --robot-lift: -7px;       /* moves ROBOT up/down. positive = UP, negative = DOWN */
     --rope-height: 7px;      /* rope height above baseline. bigger = rope higher up */
     --rope-length: 36px;     /* gap between robot and text */
     --text-size: 34px;       /* scrolling text size */
@@ -38,7 +38,7 @@
       linear-gradient(180deg, var(--ink) 0%, var(--navy) 55%, var(--ink-2) 100%); }
 
   .screen { position:relative; z-index:5; width:100vw; height:100vh;
-    display:grid; grid-template-rows:auto 1fr auto; padding:50px 64px; }
+    display:grid; grid-template-rows:auto 1fr; padding:50px 64px 90px 64px; }
 
   /* HEADER */
   .header { display:flex; align-items:flex-start; justify-content:space-between; }
@@ -62,7 +62,7 @@
 
   /* thin accent rule under the greeting */
   .rule { width:64px; height:2px; background:var(--accent); border-radius:2px;
-    margin:30px auto 46px; opacity:0.9; animation:growRule 1s ease 0.5s both; }
+    margin:18px auto 30px; opacity:0.9; animation:growRule 1s ease 0.5s both; }
   @keyframes growRule { from{width:0;opacity:0;} to{width:64px;opacity:0.9;} }
 
   /* NAMES — the hero. clean solid type, generous rhythm. */
@@ -88,19 +88,20 @@
     color:var(--soft); letter-spacing:0.03em; line-height:1.3; margin-top:4px; }
 
   /* sizes by guest count (grouped = names only, so they can be larger) */
-  .names[data-cols="1"] .g-name { font-size:101px; }
-  .names[data-cols="2"] .g-name { font-size:83px; }
-  .names[data-cols="3"] .g-name { font-size:68px; }
-  .names[data-cols="4"] .g-name { font-size:59px; }
-  .names[data-cols="5"] .g-name { font-size:50px; }
-  .names[data-grouped="true"] .guest { margin-bottom:20px; }
+  .names[data-cols="1"] .g-name { font-size:112px; }
+  .names[data-cols="2"] .g-name { font-size:92px; }
+  .names[data-cols="3"] .g-name { font-size:76px; }
+  .names[data-cols="4"] .g-name { font-size:66px; }
+  .names[data-cols="5"] .g-name { font-size:56px; }
+  .names[data-grouped="true"] .guest { margin-bottom:12px; }
 
   /* when NOT grouped, greeting shows generic + we still lead with names */
   .greeting.hidden { display:none; }
   .rule.hidden { display:none; }
 
   /* FOOTER — brand line, quiet */
-  .footer { display:block; width:100%; height:82px; overflow:hidden; position:relative; }
+  .footer { position:fixed; left:0; right:0; bottom:0; z-index:6;
+    width:100%; height:82px; overflow:hidden; }
   .hauler { position:absolute; left:0; bottom:0; height:100%; display:block; white-space:nowrap; }
   .hauler.run { animation:haul 13s linear; }
   .hauler-inner { display:flex; align-items:flex-end; height:100%;
@@ -299,27 +300,19 @@
       while (el.scrollWidth > maxW && size > NAME_MIN && guard < 400){ size-=2; guard++; el.style.fontSize=size+'px'; }
     });
 
-    // 2) HEIGHT fit — shrink names uniformly until the center block clears the ticker
-    // available vertical space for .center content = from its top to the footer top, minus gap
+    // 2) HEIGHT fit — only if the block genuinely can't fit, tighten row spacing
+    //    (never shrink the name font; sizes are set intentionally per guest count)
     var footerTop = footer.getBoundingClientRect().top;
-    var centerTop = center.getBoundingClientRect().top;
-    var available = footerTop - centerTop - SAFE_GAP;
-
-    var guard = 0;
-    while (center.scrollHeight > available && guard < 200){
-      var shrunk = false;
-      nameEls.forEach(function(el){
-        var size = parseFloat(getComputedStyle(el).fontSize);
-        if (size > NAME_MIN){ el.style.fontSize = (size - 2) + 'px'; shrunk = true; }
-      });
-      // also tighten the row spacing as we go
-      var gaps = document.querySelectorAll('.names .guest');
-      gaps.forEach(function(g){
+    var centerRect = center.getBoundingClientRect();
+    var overflowBy = (centerRect.bottom + SAFE_GAP) - footerTop;
+    if (overflowBy > 0){
+      // reduce inter-name spacing proportionally, down to a 6px floor
+      var guests = document.querySelectorAll('.names .guest');
+      guests.forEach(function(g){
         var mb = parseFloat(getComputedStyle(g).marginBottom);
-        if (mb > 6) g.style.marginBottom = (mb - 1) + 'px';
+        var reduce = Math.min(mb - 6, overflowBy / Math.max(1, guests.length));
+        if (reduce > 0) g.style.marginBottom = (mb - reduce) + 'px';
       });
-      if (!shrunk) break;   // hit the floor; stop
-      guard++;
     }
   }
   window.addEventListener('load', fitNames);
