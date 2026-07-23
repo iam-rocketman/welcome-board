@@ -251,8 +251,16 @@
   const companies = shown.map(v => (v.company||'').trim());
   const shared = companies.length && companies.every(c => c && c === companies[0]);
 
+  // sets the greeting word live; safe to call repeatedly (e.g. every minute)
+  function updateGreeting(){
+    if (shared) {
+      document.getElementById('greetWord').textContent = greetWord() + ',';
+    } else {
+      document.getElementById('greetWord').textContent = greetWord();
+    }
+  }
+
   if (shared) {
-    document.getElementById('greetWord').textContent = greetWord() + ',';
     // Template rule: "Team [Company]" for a group (2+); just the company for a solo guest.
     greetCompany.textContent = (shown.length >= 2 ? 'Team ' : '') + companies[0];
     names.setAttribute('data-grouped','true');
@@ -264,7 +272,6 @@
     });
   } else {
     // mixed companies: greeting says the time-based hello, names carry their own company
-    document.getElementById('greetWord').textContent = greetWord();
     greetCompany.textContent = 'Welcome';
     shown.forEach(v => {
       const g = document.createElement('div');
@@ -350,6 +357,7 @@
     var months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
     document.getElementById('datestr').textContent = days[now.getDay()]+', '+now.getDate()+' '+months[now.getMonth()]+' '+now.getFullYear(); }
   updateClock(); setInterval(updateClock,1000);
+  updateGreeting(); setInterval(updateGreeting, 60000);
 </script>
 </body>
 </html>
