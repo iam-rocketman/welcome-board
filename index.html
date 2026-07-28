@@ -350,50 +350,75 @@
     names.appendChild(rotWrap);
     names.appendChild(rotDots);
 
-    // find one uniform size that fits the longest name (measured off-screen)
-    var measure = document.createElement('div');
-    measure.style.cssText = 'position:absolute; visibility:hidden; white-space:nowrap; font-family:"Space Grotesk",sans-serif; font-weight:600; letter-spacing:-0.01em;';
-    document.body.appendChild(measure);
-    var availW = document.querySelector('.screen').clientWidth - 128;
-    var rSize = 108, rGuard = 0;
-    function longestOverflows(sz){
-      measure.style.fontSize = sz+'px';
-      return shown.some(function(v){ measure.textContent = v.name; return measure.scrollWidth > availW; });
-    }
-    while (longestOverflows(rSize) && rSize > 40 && rGuard < 200){ rSize -= 2; rGuard++; }
-    document.body.removeChild(measure);
+    var rotatorStarted = false;
+    function startRotator(){
+      if (rotatorStarted) return;   // never start twice (font-ready + fallback timer could both fire)
+      rotatorStarted = true;
 
-    var HOLD_MS = 2600, TRANS_MS = 550;
-    var ri = 0, dots = rotDots.children;
-    function showRotatorName(i){
-      var v = shown[i];
-      var el = document.createElement('div');
-      el.className = 'rotator-name enter-from';
-      el.style.fontSize = rSize+'px';
-      el.textContent = v.name;
-      rotWrap.appendChild(el);
-      // eslint-disable-next-line no-unused-expressions
-      el.offsetWidth; // force reflow so the enter transition plays
-      requestAnimationFrame(function(){
-        el.classList.remove('enter-from');
-        el.classList.add('visible');
-      });
-      for (var d=0; d<dots.length; d++) dots[d].classList.toggle('active', d===i);
-      return el;
+      // find one uniform size that fits the longest name (measured off-screen,
+      // using the SAME font weight/family that will actually render)
+      var measure = document.createElement('div');
+      measure.style.cssText = 'position:absolute; visibility:hidden; white-space:nowrap; font-family:"Space Grotesk",sans-serif; font-weight:600; letter-spacing:-0.01em;';
+      document.body.appendChild(measure);
+      var availW = document.querySelector('.screen').clientWidth - 128;
+      var rSize = 108, rGuard = 0;
+      function longestOverflows(sz){
+        measure.style.fontSize = sz+'px';
+        return shown.some(function(v){ measure.textContent = v.name; return measure.scrollWidth > availW; });
+      }
+      while (longestOverflows(rSize) && rSize > 40 && rGuard < 200){ rSize -= 2; rGuard++; }
+      // small safety margin: back off a couple more px in case of sub-pixel/font-metric drift
+      rSize = Math.max(40, rSize - 2);
+      document.body.removeChild(measure);
+
+      var HOLD_MS = 2600, TRANS_MS = 550;
+      var ri = 0, dots = rotDots.children;
+      function showRotatorName(i){
+        var v = shown[i];
+        var el = document.createElement('div');
+        el.className = 'rotator-name enter-from';
+        el.style.fontSize = rSize+'px';
+        el.textContent = v.name;
+        rotWrap.appendChild(el);
+        el.offsetWidth; // force reflow so the enter transition plays
+        // last-resort safety: if THIS name still overflows once actually rendered
+        // (e.g. an even longer name gets added later), shrink just this one to fit.
+        var guardSize = rSize, g2 = 0;
+        while (el.scrollWidth > availW && guardSize > 32 && g2 < 100){
+          guardSize -= 2; g2++; el.style.fontSize = guardSize+'px';
+        }
+        requestAnimationFrame(function(){
+          el.classList.remove('enter-from');
+          el.classList.add('visible');
+        });
+        for (var d=0; d<dots.length; d++) dots[d].classList.toggle('active', d===i);
+        return el;
+      }
+      var current = showRotatorName(ri);
+      function cycle(){
+        var leaving = current;
+        leaving.classList.remove('visible');
+        leaving.classList.add('exit-to');
+        setTimeout(function(){
+          leaving.remove();
+          ri = (ri+1) % shown.length;
+          current = showRotatorName(ri);
+        }, TRANS_MS);
+      }
+      setInterval(cycle, HOLD_MS + TRANS_MS);
     }
-    var current = showRotatorName(ri);
-    function cycle(){
-      var leaving = current;
-      leaving.classList.remove('visible');
-      leaving.classList.add('exit-to');
-      setTimeout(function(){
-        leaving.remove();
-        ri = (ri+1) % shown.length;
-        current = showRotatorName(ri);
-      }, TRANS_MS);
+
+    // wait for the webfont to actually load before measuring — otherwise sizes
+    // are computed against a fallback font and the real (wider) text gets clipped.
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(startRotator);
+      // safety net: if fonts.ready never resolves for some reason, start anyway
+      setTimeout(startRotator, 1500);
+    } else {
+      startRotator();
     }
-    setInterval(cycle, HOLD_MS + TRANS_MS);
   }
+
 
   // Fit names both by WIDTH (no single name overflows) and by HEIGHT
   // (the whole name list always stays above the scrolling ticker, with a gap).
