@@ -70,11 +70,14 @@
   .guest { display:block; width:100%; text-align:center; margin-bottom:26px; opacity:0;
     animation:riseIn 0.95s cubic-bezier(.2,.8,.2,1) both; }
   .guest:last-child { margin-bottom:0; }
-  .guest:nth-child(1){ animation-delay:0.30s; }
-  .guest:nth-child(2){ animation-delay:0.42s; }
-  .guest:nth-child(3){ animation-delay:0.54s; }
-  .guest:nth-child(4){ animation-delay:0.66s; }
-  .guest:nth-child(5){ animation-delay:0.78s; }
+  .guest:nth-child(1){ animation-delay:0.24s; }
+  .guest:nth-child(2){ animation-delay:0.34s; }
+  .guest:nth-child(3){ animation-delay:0.44s; }
+  .guest:nth-child(4){ animation-delay:0.54s; }
+  .guest:nth-child(5){ animation-delay:0.64s; }
+  .guest:nth-child(6){ animation-delay:0.74s; }
+  .guest:nth-child(7){ animation-delay:0.84s; }
+  .guest:nth-child(8){ animation-delay:0.94s; }
   @keyframes riseIn { from{opacity:0; transform:translateY(24px);} to{opacity:1; transform:none;} }
   @keyframes fadeDown { from{opacity:0; transform:translateY(-14px);} to{opacity:1; transform:none;} }
 
@@ -87,7 +90,7 @@
   .g-company { font-family:'Inter',sans-serif; font-weight:300; font-size:30px;
     color:var(--soft); letter-spacing:0.03em; line-height:1.3; margin-top:4px; }
 
-  /* sizes by guest count (grouped = names only, so they can be larger) */
+  /* sizes by guest count, single column (1-5 guests) */
   .names[data-cols="1"] .g-name { font-size:112px; }
   .names[data-cols="2"] .g-name { font-size:92px; }
   .names[data-cols="3"] .g-name { font-size:76px; }
@@ -95,9 +98,40 @@
   .names[data-cols="5"] .g-name { font-size:56px; }
   .names[data-grouped="true"] .guest { margin-bottom:12px; }
 
+  /* TWO-COLUMN GRID — kicks in for 6+ guests so names stay large.
+     Splits the list into 2 columns instead of shrinking one long column. */
+  .names[data-layout="grid"] { display:grid; grid-template-columns:1fr 1fr;
+    column-gap:70px; row-gap:14px; justify-items:center; align-items:start; }
+  .names[data-layout="grid"] .guest { width:auto; margin-bottom:0; }
+  .names[data-layout="grid"] .g-name { white-space:nowrap; }
+  /* size by number of ROWS (guests ÷ 2, rounded up) — the real constraint on height */
+  .names[data-layout="grid"][data-rows="3"] .g-name { font-size:80px; }
+  .names[data-layout="grid"][data-rows="4"] .g-name { font-size:68px; }
+
   /* when NOT grouped, greeting shows generic + we still lead with names */
   .greeting.hidden { display:none; }
   .rule.hidden { display:none; }
+
+  /* ROTATOR — for 6+ guests. One name at a time, slides up, holds, slides out. */
+  .rotator { position:relative; width:100%; height:150px;
+    display:flex; align-items:center; justify-content:center; overflow:hidden; }
+  .rotator-name { position:absolute; left:0; right:0; text-align:center;
+    font-family:'Space Grotesk',sans-serif; font-weight:600; letter-spacing:-0.01em;
+    white-space:nowrap; color:var(--white);
+    transition:transform 0.55s cubic-bezier(.2,.8,.2,1), opacity 0.55s ease; }
+  .rotator-name.enter-from { transform:translateY(52px); opacity:0; }
+  .rotator-name.visible    { transform:translateY(0);    opacity:1; }
+  .rotator-name.exit-to    { transform:translateY(-52px); opacity:0; }
+  .rotator-meta { position:absolute; left:0; right:0; top:100%; text-align:center;
+    margin-top:10px; font-family:'Inter',sans-serif; font-weight:300; font-size:26px;
+    color:var(--soft); opacity:0; transition:opacity 0.5s ease; }
+  .rotator-meta.visible { opacity:1; }
+  /* progress dots so it's clear more names are coming */
+  .rotator-dots { display:flex; justify-content:center; gap:9px; margin-top:26px; }
+  .rotator-dot { width:7px; height:7px; border-radius:50%; background:rgba(255,255,255,0.22);
+    transition:all 0.4s ease; }
+  .rotator-dot.active { background:var(--amber); box-shadow:0 0 10px rgba(232,161,58,0.7);
+    width:22px; border-radius:4px; }
 
   /* FOOTER — brand line, quiet */
   .footer { position:fixed; left:0; right:0; bottom:8px; z-index:6;
@@ -227,18 +261,28 @@
      and only names are listed. Otherwise each name shows its own.
      ═══════════════════════════════════════════════════════════ */
   const visitors = [
-    { name:"K. Rakesh Krishna",  title:"", company:"Mother India Forming" },
-    { name:"Aadi Sundaram Joshi", title:"", company:"Mother India Forming" },
-    { name:"Parth Upadhyay",     title:"", company:"Mother India Forming" },
+    { name:"Shreeram Shanbagh",     title:"", company:"L&T Technology Services" },
+    { name:"Shashidhara Dongre",    title:"", company:"L&T Technology Services" },
+    { name:"Vijay Mantri",          title:"", company:"L&T Technology Services" },
+    { name:"Rajeswaran Chellapandi",title:"", company:"L&T Technology Services" },
+    { name:"B R Nikhil Dev",        title:"", company:"L&T Technology Services" },
+    { name:"Tanmayee Pratap",       title:"", company:"L&T Technology Services" },
+    { name:"Roshni",                title:"", company:"L&T Technology Services" },
+    { name:"Rajendra Chaudhari",    title:"", company:"L&T Technology Services" },
   ];
   /* ═══════════════════════════════════════════════════════════ */
 
-  const shown = visitors.slice(0, 5);
+  const shown = visitors.slice(0, 8);
   const names = document.getElementById('names');
   const greeting = document.getElementById('greeting');
   const rule = document.getElementById('rule');
   const greetCompany = document.getElementById('greetCompany');
   names.setAttribute('data-cols', shown.length);
+  // 6+ guests: switch to a 2-column grid so names stay large instead of shrinking a long list
+  if (shown.length >= 6) {
+    names.setAttribute('data-layout', 'grid');
+    names.setAttribute('data-rows', Math.ceil(shown.length / 2));
+  }
 
   // time-aware greeting word
   function greetWord(){
@@ -260,29 +304,95 @@
     }
   }
 
+  const ROTATE_THRESHOLD = 6;   // 6+ guests uses the sliding rotator instead of a static list
+  const useRotator = shown.length >= ROTATE_THRESHOLD;
+
   if (shared) {
     // Template rule: "Team [Company]" for a group (2+); just the company for a solo guest.
     greetCompany.textContent = (shown.length >= 2 ? 'Team ' : '') + companies[0];
     names.setAttribute('data-grouped','true');
-    shown.forEach(v => {
-      const g = document.createElement('div');
-      g.className = 'guest';
-      g.innerHTML = '<div class="g-name">'+v.name+'</div>';
-      names.appendChild(g);
-    });
+    if (!useRotator) {
+      shown.forEach(v => {
+        const g = document.createElement('div');
+        g.className = 'guest';
+        g.innerHTML = '<div class="g-name">'+v.name+'</div>';
+        names.appendChild(g);
+      });
+    }
   } else {
     // mixed companies: greeting says the time-based hello, names carry their own company
     greetCompany.textContent = 'Welcome';
-    shown.forEach(v => {
-      const g = document.createElement('div');
-      g.className = 'guest';
-      g.innerHTML = '<div class="g-name">'+v.name+'</div>' +
-        '<div class="g-meta">' +
-          (v.title ? '<div class="g-title">'+v.title+'</div>' : '') +
-          (v.company ? '<div class="g-company">'+v.company+'</div>' : '') +
-        '</div>';
-      names.appendChild(g);
-    });
+    if (!useRotator) {
+      shown.forEach(v => {
+        const g = document.createElement('div');
+        g.className = 'guest';
+        g.innerHTML = '<div class="g-name">'+v.name+'</div>' +
+          '<div class="g-meta">' +
+            (v.title ? '<div class="g-title">'+v.title+'</div>' : '') +
+            (v.company ? '<div class="g-company">'+v.company+'</div>' : '') +
+          '</div>';
+        names.appendChild(g);
+      });
+    }
+  }
+
+  // ROTATOR — one name at a time: slides up, holds, slides out, next slides in.
+  // Used for 6+ guests so every name can stay large instead of shrinking to fit a grid.
+  if (useRotator) {
+    names.removeAttribute('data-layout');
+    names.removeAttribute('data-rows');
+
+    var rotWrap = document.createElement('div');
+    rotWrap.className = 'rotator';
+    var rotDots = document.createElement('div');
+    rotDots.className = 'rotator-dots';
+    shown.forEach(function(){ var d=document.createElement('div'); d.className='rotator-dot'; rotDots.appendChild(d); });
+    names.appendChild(rotWrap);
+    names.appendChild(rotDots);
+
+    // find one uniform size that fits the longest name (measured off-screen)
+    var measure = document.createElement('div');
+    measure.style.cssText = 'position:absolute; visibility:hidden; white-space:nowrap; font-family:"Space Grotesk",sans-serif; font-weight:600; letter-spacing:-0.01em;';
+    document.body.appendChild(measure);
+    var availW = document.querySelector('.screen').clientWidth - 128;
+    var rSize = 108, rGuard = 0;
+    function longestOverflows(sz){
+      measure.style.fontSize = sz+'px';
+      return shown.some(function(v){ measure.textContent = v.name; return measure.scrollWidth > availW; });
+    }
+    while (longestOverflows(rSize) && rSize > 40 && rGuard < 200){ rSize -= 2; rGuard++; }
+    document.body.removeChild(measure);
+
+    var HOLD_MS = 2600, TRANS_MS = 550;
+    var ri = 0, dots = rotDots.children;
+    function showRotatorName(i){
+      var v = shown[i];
+      var el = document.createElement('div');
+      el.className = 'rotator-name enter-from';
+      el.style.fontSize = rSize+'px';
+      el.textContent = v.name;
+      rotWrap.appendChild(el);
+      // eslint-disable-next-line no-unused-expressions
+      el.offsetWidth; // force reflow so the enter transition plays
+      requestAnimationFrame(function(){
+        el.classList.remove('enter-from');
+        el.classList.add('visible');
+      });
+      for (var d=0; d<dots.length; d++) dots[d].classList.toggle('active', d===i);
+      return el;
+    }
+    var current = showRotatorName(ri);
+    function cycle(){
+      var leaving = current;
+      leaving.classList.remove('visible');
+      leaving.classList.add('exit-to');
+      setTimeout(function(){
+        leaving.remove();
+        ri = (ri+1) % shown.length;
+        current = showRotatorName(ri);
+      }, TRANS_MS);
+    }
+    setInterval(cycle, HOLD_MS + TRANS_MS);
   }
 
   // Fit names both by WIDTH (no single name overflows) and by HEIGHT
@@ -297,13 +407,34 @@
     var footer = document.querySelector('.footer');
     var nameEls = document.querySelectorAll('.g-name');
 
-    // 1) WIDTH fit — no single name wider than the screen
-    var maxW = screen.clientWidth - 128;
-    document.querySelectorAll('.g-name, .greeting-company').forEach(function(el){
-      el.style.fontSize = '';               // reset to CSS default first
-      var size = parseFloat(getComputedStyle(el).fontSize), guard=0;
-      while (el.scrollWidth > maxW && size > NAME_MIN && guard < 400){ size-=2; guard++; el.style.fontSize=size+'px'; }
-    });
+    // 1) WIDTH fit — find ONE size that fits the longest name in its column,
+    //    then apply that same size to every name so they all match (grid mode
+    //    especially needs this — otherwise short names look huge next to long ones).
+    var isGrid = names.getAttribute('data-layout') === 'grid';
+    var maxW = isGrid ? (screen.clientWidth - 128 - 70) / 2 : screen.clientWidth - 128;
+
+    var nameGroup = document.querySelectorAll('.g-name');
+    nameGroup.forEach(function(el){ el.style.fontSize = ''; }); // reset to CSS default
+    var baseSize = nameGroup.length ? parseFloat(getComputedStyle(nameGroup[0]).fontSize) : 0;
+    var size = baseSize, guard = 0;
+    function anyOverflow(sz){
+      for (var i=0;i<nameGroup.length;i++){
+        nameGroup[i].style.fontSize = sz+'px';
+        if (nameGroup[i].scrollWidth > maxW) return true;
+      }
+      return false;
+    }
+    while (anyOverflow(size) && size > NAME_MIN && guard < 400){ size -= 2; guard++; }
+    nameGroup.forEach(function(el){ el.style.fontSize = size+'px'; });
+
+    // greeting company line fits independently (it's not part of the grid)
+    var gc = document.querySelector('.greeting-company');
+    if (gc){
+      gc.style.fontSize = '';
+      var gcMax = screen.clientWidth - 128;
+      var gcSize = parseFloat(getComputedStyle(gc).fontSize), gGuard=0;
+      while (gc.scrollWidth > gcMax && gcSize > NAME_MIN && gGuard < 400){ gcSize-=2; gGuard++; gc.style.fontSize=gcSize+'px'; }
+    }
 
     // 2) HEIGHT fit — only if the block genuinely can't fit, tighten row spacing
     //    (never shrink the name font; sizes are set intentionally per guest count)
