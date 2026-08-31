@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>ANSCER | The Autonomous Flow Index</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#002060; --ink:#041E42; --blue:#0070C0; --blue-mid:#2062AE; --blue-lt:#2D78BD;
+    --steel:#F5F7FA; --line:#C7D0DD; --white:#fff;
+    --good:#0E9F6E; --good-bg:#E7F6EF; --bad:#B23A48; --bad-bg:#FBECEE;
+    --shadow:0 18px 50px rgba(4,30,66,.14);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:'Montserrat',system-ui,sans-serif;color:var(--ink);
+    background:
+      radial-gradient(1200px 600px at 85% -10%, rgba(0,112,192,.10), transparent 60%),
+      radial-gradient(900px 500px at -10% 110%, rgba(0,32,96,.08), transparent 55%),
+      var(--steel);
+    min-height:100%;display:flex;align-items:center;justify-content:center;padding:18px;
+    -webkit-tap-highlight-color:transparent;touch-action:manipulation;overscroll-behavior:none;
+  }
+  .stage{width:100%;max-width:920px;display:flex}
+  .card{background:var(--white);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);overflow:hidden;
+    display:flex;flex-direction:column;flex:1;min-height:calc(100dvh - 36px)}
+
+  .topbar{display:flex;align-items:center;justify-content:space-between;padding:15px 22px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,#fff,#fbfcfe)}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.14em;font-size:12.5px;color:var(--navy)}
+  .brand .dot{width:9px;height:9px;border-radius:50%;background:var(--blue);box-shadow:0 0 0 4px rgba(0,112,192,.16)}
+  .counter{font-size:12px;font-weight:700;color:var(--blue-mid);letter-spacing:.06em}
+
+  .track{display:flex;gap:4px;padding:12px 22px 0}
+  .seg{flex:1;height:5px;border-radius:99px;background:#E7ECF3;overflow:hidden}
+  .seg > i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--blue),var(--blue-lt));transition:width .4s cubic-bezier(.4,.9,.3,1)}
+  .seg.done > i{width:100%}
+
+  /* INTRO */
+  .intro{padding:48px 40px;text-align:center;display:flex;flex:1;flex-direction:column;align-items:center;justify-content:center}
+  .intro .kick{font-size:12px;font-weight:800;letter-spacing:.26em;color:var(--blue);text-transform:uppercase}
+  .intro h1{font-size:clamp(30px,5vw,46px);font-weight:900;color:var(--navy);line-height:1.05;margin:14px 0 16px;letter-spacing:-.01em;max-width:640px}
+  .intro p{font-size:clamp(16px,1.9vw,19px);line-height:1.6;color:#41506a;max-width:520px;margin:0 auto 6px}
+  .intro .meta{font-size:14px;font-weight:700;color:var(--blue-mid);letter-spacing:.04em;margin:22px 0 28px}
+  .cta{font-family:inherit;font-weight:800;font-size:16px;letter-spacing:.03em;border:none;border-radius:13px;padding:17px 44px;cursor:pointer;background:var(--navy);color:#fff;transition:background .15s,transform .06s}
+  .cta:hover{background:var(--blue)} .cta:active{transform:translateY(1px)}
+  .cta:focus-visible{outline:3px solid rgba(0,112,192,.4);outline-offset:2px}
+
+  /* DIVIDER */
+  .divider{padding:40px;text-align:center;display:none;flex:1;flex-direction:column;align-items:center;justify-content:center}
+  .divider .dk{font-size:12px;font-weight:800;letter-spacing:.26em;color:var(--blue);text-transform:uppercase;margin-bottom:14px}
+  .divider h2{font-size:clamp(26px,4.4vw,38px);font-weight:900;color:var(--navy);line-height:1.15;max-width:520px;margin:0 auto 30px}
+  .divider .cta{padding:15px 36px;font-size:15px}
+
+  /* QUIZ */
+  .body{padding:34px 40px 0;display:none;flex:1;flex-direction:column}
+  .stagelabel,.q,.opts,.reveal,.foot{width:100%;max-width:680px;margin-left:auto;margin-right:auto}
+  .stagelabel{font-size:12px;font-weight:800;letter-spacing:.2em;color:var(--blue);text-transform:uppercase}
+  .q{font-size:clamp(20px,2.6vw,27px);font-weight:800;color:var(--ink);line-height:1.3;margin:10px auto 22px}
+  .opts{display:flex;flex-direction:column;gap:11px}
+  .opt{text-align:left;width:100%;cursor:pointer;border:1.5px solid var(--line);background:#fff;border-radius:13px;padding:17px 18px;font-family:inherit;font-size:16.5px;font-weight:600;color:var(--ink);display:flex;align-items:center;gap:14px;transition:border-color .15s,background .15s;-webkit-user-select:none;user-select:none}
+  .opt .mk{flex:0 0 auto;width:26px;height:26px;border-radius:8px;border:2px solid var(--line);display:grid;place-items:center;font-size:14px;font-weight:800;color:var(--blue-mid);transition:all .15s}
+  .opt:hover:not(.locked){border-color:var(--blue-lt);background:#F3F8FE}
+  .opt:focus-visible{outline:3px solid rgba(0,112,192,.35);outline-offset:2px}
+  .opt.locked{cursor:default}
+  .opt.correct{border-color:var(--good);background:var(--good-bg)}
+  .opt.correct .mk{border-color:var(--good);background:var(--good);color:#fff}
+  .opt.wrong{border-color:var(--bad);background:var(--bad-bg)}
+  .opt.wrong .mk{border-color:var(--bad);background:var(--bad);color:#fff}
+  .opt.chosen{border-color:var(--blue);background:#EAF4FD}
+  .opt.chosen .mk{border-color:var(--blue);background:var(--blue);color:#fff}
+
+  .reveal{margin:16px auto 4px;padding:16px 18px;border-radius:12px;background:#F1F5FA;border-left:4px solid var(--blue);display:none}
+  .reveal.show{display:block;animation:fade .3s ease both}
+  .reveal .rh{font-size:15.5px;font-weight:800;color:var(--good);margin-bottom:6px}
+  .reveal .rb{font-size:14.5px;line-height:1.55;color:#33445e;margin-bottom:4px}
+  .reveal .src{font-size:12px;font-style:italic;color:#7688a1;margin-top:8px}
+  @keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+  .foot{display:flex;align-items:center;justify-content:flex-end;padding:22px 0 26px;margin-top:auto}
+  .btn{font-family:inherit;font-weight:700;font-size:15px;letter-spacing:.03em;border:none;border-radius:12px;padding:15px 34px;cursor:pointer;background:var(--navy);color:#fff;transition:background .15s,transform .06s}
+  .btn:hover{background:var(--blue)} .btn:active{transform:translateY(1px)}
+  .btn:disabled{opacity:.35;cursor:not-allowed}
+  .btn:focus-visible{outline:3px solid rgba(0,112,192,.4);outline-offset:2px}
+  .btn.ghost{background:transparent;color:var(--blue-mid)} .btn.ghost:hover{background:transparent;color:var(--navy)}
+
+  /* RESULT */
+  .result{padding:40px;text-align:center;display:none;flex:1;flex-direction:column;align-items:center;justify-content:center}
+  .result .rk{font-size:12px;font-weight:800;letter-spacing:.24em;color:var(--blue);text-transform:uppercase}
+  .p-title{font-size:clamp(26px,4.4vw,38px);font-weight:900;color:var(--navy);line-height:1.05;margin:10px 0 16px;letter-spacing:-.01em}
+  .p-text{font-size:clamp(16px,1.9vw,19px);line-height:1.65;color:#3a4a63;max-width:540px;margin:0 auto 8px}
+  .score{display:inline-block;margin:16px 0 4px;padding:7px 15px;border-radius:99px;background:#EAF4FD;color:var(--blue-mid);font-weight:700;font-size:12.5px;letter-spacing:.03em}
+
+  .tagwrap{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin:22px 0 18px}
+  .tag{width:212px;height:256px;border-radius:18px;position:relative;overflow:hidden;box-shadow:0 14px 30px rgba(0,32,96,.28);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px 20px}
+  .tag .hole{position:absolute;top:14px;left:50%;transform:translateX(-50%);width:26px;height:10px;border-radius:99px;background:rgba(255,255,255,.5);box-shadow:inset 0 1px 2px rgba(0,0,0,.25)}
+  .tag.front{background:radial-gradient(circle at 50% 28%,var(--blue-lt),var(--navy));color:#fff}
+  .tag.front .glyph{font-size:40px;margin-bottom:10px;filter:drop-shadow(0 3px 6px rgba(0,0,0,.3))}
+  .tag.front .lbl{font-size:10px;font-weight:700;letter-spacing:.22em;color:#bfe0fb;text-transform:uppercase}
+  .tag.front .ttl{font-size:20px;font-weight:900;line-height:1.12;margin-top:6px}
+  .tag.back{background:#fff;border:1.5px solid var(--line);color:var(--ink)}
+  .tag.back .co{font-size:16px;font-weight:900;letter-spacing:.12em;color:var(--navy)}
+  .tag.back .rob{font-size:10px;font-weight:700;letter-spacing:.16em;color:var(--blue);margin-top:2px}
+  .tag.back .ln{width:40px;height:2px;background:var(--blue);margin:13px auto}
+  .tag.back .tl{font-size:12px;font-weight:600;line-height:1.5;color:#41506a}
+  .tag.back .foot2{position:absolute;bottom:16px;left:0;right:0;font-size:9px;font-weight:800;letter-spacing:.15em;color:var(--blue-mid);text-transform:uppercase}
+  .side{font-size:10px;font-weight:800;letter-spacing:.16em;color:#98a6bd;text-transform:uppercase;margin-top:7px}
+
+  .r-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:6px}
+  .signoff{text-align:center;padding:14px;font-size:11px;letter-spacing:.22em;font-weight:800;color:var(--blue-mid);text-transform:uppercase;border-top:1px solid var(--line)}
+
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="card">
+    <div class="topbar">
+      <div class="brand"><span class="dot"></span>ANSCER ROBOTICS</div>
+      <div class="counter" id="counter">Flow Index</div>
+    </div>
+    <div class="track" id="track"></div>
+
+    <!-- INTRO -->
+    <div class="intro" id="introView">
+      <div class="kick">The Autonomous Flow Index</div>
+      <h1>How ready are you for the next generation of material movement?</h1>
+      <p>A short diagnostic on the ideas driving autonomous material movement, and the way you think about putting it to work.</p>
+      <div class="meta">13 questions &nbsp;·&nbsp; One Flow Profile</div>
+      <button class="cta" id="startBtn">Start &rarr;</button>
+    </div>
+
+    <!-- DIVIDER -->
+    <div class="divider" id="dividerView">
+      <div class="dk">Part Two</div>
+      <h2>The industry is moving.<br>Where do you fit in?</h2>
+      <button class="cta" id="dividerBtn">Continue &rarr;</button>
+    </div>
+
+    <!-- QUIZ -->
+    <div class="body" id="quizView">
+      <div class="stagelabel" id="stageLabel"></div>
+      <h2 class="q" id="qText"></h2>
+      <div class="opts" id="opts"></div>
+      <div class="reveal" id="reveal"></div>
+      <div class="foot">
+        <button class="btn" id="nextBtn" disabled>Continue</button>
+      </div>
+    </div>
+
+    <!-- RESULT -->
+    <div class="result" id="resultView">
+      <div class="rk">Your Flow Profile</div>
+      <div class="p-title" id="pTitle"></div>
+      <div class="p-text" id="pText"></div>
+      <div class="tagwrap">
+        <div>
+          <div class="tag front">
+            <span class="hole"></span>
+            <div class="glyph" id="pGlyph">🎯</div>
+            <div class="lbl">Automation Persona</div>
+            <div class="ttl" id="tTitle"></div>
+          </div>
+          <div class="side">Front</div>
+        </div>
+        <div>
+          <div class="tag back">
+            <span class="hole"></span>
+            <div class="co">ANSCER</div>
+            <div class="rob">ROBOTICS</div>
+            <div class="ln"></div>
+            <div class="tl">Autonomous mobile robots and AGVs for end to end material movement.</div>
+            <div class="foot2">Material Movement Redefined</div>
+          </div>
+          <div class="side">Back</div>
+        </div>
+      </div>
+      <div class="r-actions">
+        <button class="btn" id="shareBtn">Copy my profile</button>
+        <button class="btn ghost" id="restartBtn">Start over</button>
+      </div>
+    </div>
+
+    <div class="signoff">Material Movement Redefined</div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   CONTENT  (everything editable lives here)
+   type: stat | concept  -> scored, has reveal
+         profile          -> recorded, no reveal
+         persona          -> maps option -> persona, no reveal
+   correct: index of right option (scored questions)
+   persona questions carry map[] : option index -> persona key
+   dividerBefore:true  -> show the "Part Two" screen before this Q
+   ============================================================ */
+const PERSONAS = {
+  EVALUATOR:{ rank:1, glyph:"🎯", title:"THE STRATEGIC EVALUATOR",
+    text:"You are at the point where knowing more is no longer the advantage. Choosing better is. The opportunity now is to identify which automation moves deserve to happen first." },
+  ADOPTER:{ rank:2, glyph:"🔧", title:"THE PRACTICAL ADOPTER",
+    text:"You favour proof over promise. Automation earns its place when it solves a real operational problem. The next step is making those wins repeatable, not isolated." },
+  ARCHITECT:{ rank:3, glyph:"🏗️", title:"THE SCALE ARCHITECT",
+    text:"The question is no longer whether automation works. It is how well it scales. The opportunity is to expand across workflows without letting complexity scale with it." },
+  ORCHESTRATOR:{ rank:4, glyph:"🎛️", title:"THE SYSTEMS ORCHESTRATOR",
+    text:"You are looking beyond individual automation to how the operation moves as a whole. The next advantage comes from connecting demand, decisions and autonomous execution." },
+};
+
+const QUESTIONS = [
+  { type:"stat", stage:"Market Signal", correct:2,
+    q:"Where does India rank globally for annual industrial robot installations?",
+    opts:["12th","9th","6th","4th"],
+    reveal:{ h:"6th globally",
+      body:["India installed a record 9,100+ industrial robots in 2024, up 7% year-on-year.",
+            "The automation benchmark is moving within Indian manufacturing itself."],
+      src:"Source: International Federation of Robotics, World Robotics 2025" } },
+
+  { type:"stat", stage:"Market Signal", correct:2,
+    q:"Which application accounted for the largest number of professional service robots sold globally in 2024?",
+    opts:["Cleaning","Hospitality","Shopfloor and logistics","Inspection"],
+    reveal:{ h:"Shopfloor and logistics",
+      body:["102,900 robots were sold for transportation and logistics applications in 2024, up 14% year-on-year.",
+            "More than 1 in every 2 professional service robots sold was built to move goods or cargo.",
+            "Material movement isn't an emerging robotics application. It's already the largest one."],
+      src:"Source: International Federation of Robotics, World Robotics 2025" } },
+
+  { type:"stat", stage:"Market Signal", correct:3,
+    q:"What percentage of warehouse decision-makers surveyed said they planned to implement mobile robots by 2028?",
+    opts:["45%","60%","75%","88%"],
+    reveal:{ h:"88%",
+      body:["88% of warehouse decision-makers surveyed planned to implement mobile robots for a wide range of tasks by 2028.",
+            "Mobile robotics is increasingly becoming part of mainstream automation planning."],
+      src:"Source: Zebra Technologies, Global Warehouse Vision Study" } },
+
+  { type:"concept", stage:"The 4.0 Shift", correct:1,
+    q:"An operation runs many automated machines that don't share data with each other. In Industry terms, it is:",
+    opts:["Fully Industry 4.0","Still Industry 3.0","Already Industry 5.0","Pre Industry 3.0"],
+    reveal:{ h:"Still Industry 3.0",
+      body:["Automation alone is 3.0. Connectivity and data exchange between systems are what make it 4.0.",
+            "The leap isn't more machines. It's machines that talk to each other."] } },
+
+  { type:"concept", stage:"Knowing the Difference", correct:1,
+    q:"\u201CProcess automation\u201D can mean very different things. Which of these describes physical material-movement automation, not RPA?",
+    opts:["Software bots entering data across systems",
+          "AMR transporting goods between points on the floor",
+          "Automated invoice and order processing",
+          "Rule-based digital workflows"],
+    reveal:{ h:"AMR transporting goods between points on the floor",
+      body:["RPA automates digital tasks, data, documents, transactions. Material-movement automation moves physical goods.",
+            "Both are \u201Cautomation,\u201D but only one changes how material actually flows through your operation."] } },
+
+  { type:"concept", stage:"The Connected Factory", correct:1,
+    q:"A digital twin is best understood as:",
+    opts:["A detailed 3D model of the facility","A live replica fed by real-time data","A KPI dashboard","A database backup"],
+    reveal:{ h:"A live replica fed by real-time data",
+      body:["The live data link is the definition. A 3D model without it is just a model.",
+            "A true twin mirrors the operation as it runs, so you can simulate and predict."] } },
+
+  { type:"concept", stage:"Intelligent Flow", correct:1,
+    q:"Automating a single fast workstation in isolation usually:",
+    opts:["Eliminates the bottleneck","Shifts the bottleneck elsewhere","Doubles throughput","Reduces safety"],
+    reveal:{ h:"Shifts the bottleneck elsewhere",
+      body:["Flow is a system, not a sum of parts. Speeding up one station relocates the constraint downstream.",
+            "In a balanced system, the gain comes from the whole flow, not one station."] } },
+
+  { type:"profile", stage:"About You", dividerBefore:true,
+    q:"Which sectors do you work across?",
+    opts:["Automotive","Electronics / Electrical","FMCG / Consumer Goods","Pharma / Healthcare","Warehousing / 3PL","Industrial Manufacturing","Other"] },
+
+  { type:"profile", stage:"About You",
+    q:"How familiar are you with AMR-based material movement?",
+    opts:["New to the concept","Familiar with the basics","Exploring use cases","Evaluating solutions","Work with AMRs directly"] },
+
+  { type:"persona", stage:"How You Think",
+    q:"When an expert assesses an automation opportunity, what do they focus on first?",
+    opts:["Which moves are worth making at all","Whether it will hold up in real operations","Whether it can scale across the business","How it connects into the wider system"],
+    map:["EVALUATOR","ADOPTER","ARCHITECT","ORCHESTRATOR"] },
+
+  { type:"persona", stage:"How You Think",
+    q:"In your experience, what most often decides whether an automation project succeeds?",
+    opts:["Picking the right problem to solve first","Proving it in real conditions before scaling","Designing it to scale from day one","Integrating it with the systems around it"],
+    map:["EVALUATOR","ADOPTER","ARCHITECT","ORCHESTRATOR"] },
+
+  { type:"persona", stage:"How You Think",
+    q:"What is the most common reason automation stalls?",
+    opts:["The wrong priority was chosen","It worked in a pilot but not in practice","It couldn't scale beyond the first use case","It stayed a silo and never connected"],
+    map:["EVALUATOR","ADOPTER","ARCHITECT","ORCHESTRATOR"] },
+
+  { type:"profile", stage:"About You",
+    q:"To automate material movement first, what would a seasoned automation expert target?",
+    opts:["Inbound unloading and putaway","Feeding parts to the production line (line-side delivery)","Moving work-in-progress between process steps","Finished goods to dispatch and loading","The longest, most repetitive manual route"] },
+];
+
+/* ==================== ENGINE ==================== */
+const scored = QUESTIONS.filter(q=>q.type==="stat"||q.type==="concept").length;
+let idx=0, correctCount=0, answered=false;
+const personaTally={EVALUATOR:0,ADOPTER:0,ARCHITECT:0,ORCHESTRATOR:0};
+
+const track=document.getElementById("track");
+const counter=document.getElementById("counter");
+const introView=document.getElementById("introView");
+const dividerView=document.getElementById("dividerView");
+const quizView=document.getElementById("quizView");
+const resultView=document.getElementById("resultView");
+const stageLabel=document.getElementById("stageLabel");
+const qText=document.getElementById("qText");
+const optsEl=document.getElementById("opts");
+const revealEl=document.getElementById("reveal");
+const nextBtn=document.getElementById("nextBtn");
+const LETTERS=["A","B","C","D","E","F","G"];
+
+QUESTIONS.forEach(()=>{const s=document.createElement("div");s.className="seg";s.innerHTML="<i></i>";track.appendChild(s);});
+
+document.getElementById("startBtn").onclick=()=>{introView.style.display="none";maybeDivider();};
+document.getElementById("dividerBtn").onclick=()=>{dividerView.style.display="none";quizView.style.display="flex";render();};
+
+function maybeDivider(){
+  if(QUESTIONS[idx].dividerBefore){
+    quizView.style.display="none";
+    dividerView.style.display="flex";
+    counter.textContent="Part Two";
+  } else {
+    quizView.style.display="flex";
+    render();
+  }
+}
+
+function render(){
+  answered=false;
+  const item=QUESTIONS[idx];
+  counter.textContent=(idx+1)+" of "+QUESTIONS.length;
+  stageLabel.textContent=item.stage;
+  qText.textContent=item.q;
+  revealEl.classList.remove("show");
+  revealEl.innerHTML="";
+  nextBtn.disabled=true;
+  nextBtn.textContent = idx===QUESTIONS.length-1 ? "See my profile" : "Continue";
+  optsEl.innerHTML="";
+  item.opts.forEach((txt,i)=>{
+    const b=document.createElement("button");
+    b.className="opt";
+    b.innerHTML='<span class="mk">'+LETTERS[i]+'</span><span>'+txt+'</span>';
+    b.onclick=()=>choose(i,b);
+    optsEl.appendChild(b);
+  });
+}
+
+function choose(i,btn){
+  if(answered) return;
+  answered=true;
+  const item=QUESTIONS[idx];
+  const buttons=[...optsEl.children];
+  buttons.forEach(b=>b.classList.add("locked"));
+
+  if(item.type==="stat"||item.type==="concept"){
+    if(i===item.correct){ correctCount++; btn.classList.add("correct"); btn.querySelector(".mk").textContent="\u2713"; }
+    else{
+      btn.classList.add("wrong"); btn.querySelector(".mk").textContent="\u2715";
+      buttons[item.correct].classList.add("correct");
+      buttons[item.correct].querySelector(".mk").textContent="\u2713";
+    }
+    const r=item.reveal;
+    let html='<div class="rh">'+r.h+'</div>';
+    r.body.forEach(line=>html+='<div class="rb">'+line+'</div>');
+    if(r.src) html+='<div class="src">'+r.src+'</div>';
+    revealEl.innerHTML=html;
+    revealEl.classList.add("show");
+  } else {
+    btn.classList.add("chosen"); btn.querySelector(".mk").textContent="\u2713";
+    if(item.type==="persona") personaTally[item.map[i]]++;
+  }
+  track.children[idx].classList.add("done");
+  nextBtn.disabled=false;
+}
+
+nextBtn.onclick=()=>{
+  if(!answered) return;
+  if(idx<QUESTIONS.length-1){ idx++; maybeDivider(); }
+  else showResult();
+};
+
+function pickPersona(){
+  // most-picked stance wins; tie resolves to higher rank (more advanced)
+  let best=null;
+  Object.keys(personaTally).forEach(k=>{
+    const c=personaTally[k];
+    if(best===null) { best=k; return; }
+    if(c>personaTally[best] || (c===personaTally[best] && PERSONAS[k].rank>PERSONAS[best].rank)) best=k;
+  });
+  // no persona answers at all -> default Evaluator
+  if(!best || Object.values(personaTally).every(v=>v===0)) best="EVALUATOR";
+  return PERSONAS[best];
+}
+
+function showResult(){
+  const p=pickPersona();
+  document.getElementById("pTitle").textContent=p.title;
+  document.getElementById("pText").textContent=p.text;
+  document.getElementById("tTitle").textContent=p.title;
+  document.getElementById("pGlyph").textContent=p.glyph;
+  quizView.style.display="none";
+  resultView.style.display="flex";
+  counter.textContent="Result";
+
+  const shareBtn=document.getElementById("shareBtn");
+  shareBtn.textContent="Copy my profile";
+  shareBtn.onclick=()=>{
+    const txt="My Automation Persona is "+p.title+" — from ANSCER's Autonomous Flow Index.";
+    navigator.clipboard?.writeText(txt).then(
+      ()=>{shareBtn.textContent="Copied \u2713";setTimeout(()=>shareBtn.textContent="Copy my profile",1600);},
+      ()=>{shareBtn.textContent="Copy failed";setTimeout(()=>shareBtn.textContent="Copy my profile",1600);}
+    );
+  };
+}
+
+document.getElementById("restartBtn").onclick=()=>{
+  idx=0;correctCount=0;answered=false;
+  Object.keys(personaTally).forEach(k=>personaTally[k]=0);
+  [...track.children].forEach(s=>s.classList.remove("done"));
+  resultView.style.display="none";
+  counter.textContent="Flow Index";
+  introView.style.display="flex";
+};
+</script>
+</body>
+</html>
