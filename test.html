@@ -23,12 +23,12 @@
       radial-gradient(1200px 600px at 85% -10%, rgba(0,112,192,.10), transparent 60%),
       radial-gradient(900px 500px at -10% 110%, rgba(0,32,96,.08), transparent 55%),
       var(--steel);
-    min-height:100%;display:flex;align-items:center;justify-content:center;padding:18px;
+    min-height:100%;display:flex;align-items:stretch;justify-content:center;padding:0;
     -webkit-tap-highlight-color:transparent;touch-action:manipulation;overscroll-behavior:none;
   }
   .stage{width:100%;max-width:920px;display:flex}
-  .card{background:var(--white);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);overflow:hidden;
-    display:flex;flex-direction:column;flex:1;min-height:calc(100dvh - 36px)}
+  .card{background:var(--white);border:none;border-radius:0;box-shadow:none;overflow:hidden;
+    display:flex;flex-direction:column;flex:1;min-height:100dvh}
 
   .topbar{display:flex;align-items:center;justify-content:space-between;padding:15px 22px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,#fff,#fbfcfe)}
   .brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.14em;font-size:12.5px;color:var(--navy)}
@@ -46,7 +46,11 @@
   .intro h1{font-size:clamp(30px,5vw,46px);font-weight:900;color:var(--navy);line-height:1.05;margin:14px 0 16px;letter-spacing:-.01em;max-width:640px}
   .intro p{font-size:clamp(16px,1.9vw,19px);line-height:1.6;color:#41506a;max-width:520px;margin:0 auto 6px}
   .intro .meta{font-size:14px;font-weight:700;color:var(--blue-mid);letter-spacing:.04em;margin:22px 0 28px}
-  .cta{font-family:inherit;font-weight:800;font-size:16px;letter-spacing:.03em;border:none;border-radius:13px;padding:17px 44px;cursor:pointer;background:var(--navy);color:#fff;transition:background .15s,transform .06s}
+  .cta{font-family:inherit;font-weight:800;font-size:16px;letter-spacing:.03em;border:none;border-radius:13px;padding:17px 44px;cursor:pointer;background:var(--navy);color:#fff;transition:background .15s,transform .06s;white-space:nowrap}
+  .cta-slot{position:relative;display:inline-block}
+  .cta-sizer{visibility:hidden;white-space:nowrap}
+  .cta-live{position:absolute;left:0;top:0;bottom:0;white-space:nowrap;display:flex;align-items:center}
+  .caret{margin-left:1px;font-weight:600}
   .cta:hover{background:var(--blue)} .cta:active{transform:translateY(1px)}
   .cta:focus-visible{outline:3px solid rgba(0,112,192,.4);outline-offset:2px}
 
@@ -82,6 +86,10 @@
   @keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
 
   .foot{display:flex;align-items:center;justify-content:flex-end;padding:22px 0 26px;margin-top:auto}
+  .foot.final{justify-content:center;margin-top:64px;padding:0 0 40px}
+  .btn.reveal-cta{font-size:30px;font-weight:800;padding:32px 84px;border-radius:18px;letter-spacing:.02em}
+  .btn.reveal-cta:hover{background:var(--blue)}
+  .nav-arrow{display:inline-block;width:1.1em;text-align:left;margin-left:6px}
   .btn{font-family:inherit;font-weight:700;font-size:15px;letter-spacing:.03em;border:none;border-radius:12px;padding:15px 34px;cursor:pointer;background:var(--navy);color:#fff;transition:background .15s,transform .06s}
   .btn:hover{background:var(--blue)} .btn:active{transform:translateY(1px)}
   .btn:disabled{opacity:.35;cursor:not-allowed}
@@ -89,28 +97,30 @@
   .btn.ghost{background:transparent;color:var(--blue-mid)} .btn.ghost:hover{background:transparent;color:var(--navy)}
 
   /* RESULT */
-  .result{padding:40px;text-align:center;display:none;flex:1;flex-direction:column;align-items:center;justify-content:center}
+  .result{padding:40px 20px;text-align:center;display:none;flex:1;flex-direction:column;align-items:center;justify-content:center;overflow-y:auto;min-height:0}
   .result .rk{font-size:12px;font-weight:800;letter-spacing:.24em;color:var(--blue);text-transform:uppercase}
   .p-title{font-size:clamp(26px,4.4vw,38px);font-weight:900;color:var(--navy);line-height:1.05;margin:10px 0 16px;letter-spacing:-.01em}
   .p-text{font-size:clamp(16px,1.9vw,19px);line-height:1.65;color:#3a4a63;max-width:540px;margin:0 auto 8px}
   .score{display:inline-block;margin:16px 0 4px;padding:7px 15px;border-radius:99px;background:#EAF4FD;color:var(--blue-mid);font-weight:700;font-size:12.5px;letter-spacing:.03em}
 
   .tagwrap{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin:22px 0 18px}
-  .tag{width:212px;height:256px;border-radius:18px;position:relative;overflow:hidden;box-shadow:0 14px 30px rgba(0,32,96,.28);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px 20px}
+  .tag-img-wrap{display:flex;gap:20px;justify-content:center;align-items:center;max-width:100%;width:100%}
+  .tag-img{max-width:360px;width:45%;height:auto;border-radius:16px;box-shadow:0 14px 30px rgba(0,32,96,.28);display:block}
+  .tag-fallback{display:flex;flex-shrink:0}
+  .tag{width:280px;height:360px;border-radius:18px;position:relative;overflow:hidden;box-shadow:0 14px 30px rgba(0,32,96,.28);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px 20px}
   .tag .hole{position:absolute;top:14px;left:50%;transform:translateX(-50%);width:26px;height:10px;border-radius:99px;background:rgba(255,255,255,.5);box-shadow:inset 0 1px 2px rgba(0,0,0,.25)}
   .tag.front{background:radial-gradient(circle at 50% 28%,var(--blue-lt),var(--navy));color:#fff}
   .tag.front .glyph{font-size:40px;margin-bottom:10px;filter:drop-shadow(0 3px 6px rgba(0,0,0,.3))}
   .tag.front .lbl{font-size:10px;font-weight:700;letter-spacing:.22em;color:#bfe0fb;text-transform:uppercase}
   .tag.front .ttl{font-size:20px;font-weight:900;line-height:1.12;margin-top:6px}
-  .tag.back{background:#fff;border:1.5px solid var(--line);color:var(--ink)}
-  .tag.back .co{font-size:16px;font-weight:900;letter-spacing:.12em;color:var(--navy)}
-  .tag.back .rob{font-size:10px;font-weight:700;letter-spacing:.16em;color:var(--blue);margin-top:2px}
-  .tag.back .ln{width:40px;height:2px;background:var(--blue);margin:13px auto}
-  .tag.back .tl{font-size:12px;font-weight:600;line-height:1.5;color:#41506a}
-  .tag.back .foot2{position:absolute;bottom:16px;left:0;right:0;font-size:9px;font-weight:800;letter-spacing:.15em;color:var(--blue-mid);text-transform:uppercase}
-  .side{font-size:10px;font-weight:800;letter-spacing:.16em;color:#98a6bd;text-transform:uppercase;margin-top:7px}
 
-  .r-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:6px}
+  .r-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px}
+  .reward{margin:4px auto 4px;text-align:center}
+  .reward-lbl{font-size:11px;font-weight:800;letter-spacing:.2em;color:var(--blue);text-transform:uppercase}
+  .reward-val{font-size:clamp(19px,2.4vw,24px);font-weight:900;color:var(--navy);margin-top:4px}
+  .skubox{margin:18px auto 20px;max-width:360px;background:var(--navy);border-radius:16px;padding:18px 22px;color:#fff;box-shadow:0 14px 30px rgba(0,32,96,.28)}
+  .sku-lbl{font-size:11px;font-weight:700;letter-spacing:.06em;color:#bfe0fb;text-transform:uppercase}
+  .sku-code{font-size:clamp(34px,7vw,46px);font-weight:900;letter-spacing:.28em;margin-top:6px;padding-left:.28em}
   .signoff{text-align:center;padding:14px;font-size:11px;letter-spacing:.22em;font-weight:800;color:var(--blue-mid);text-transform:uppercase;border-top:1px solid var(--line)}
 
   @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
@@ -128,17 +138,17 @@
     <!-- INTRO -->
     <div class="intro" id="introView">
       <div class="kick">The Autonomous Flow Index</div>
-      <h1>How ready are you for the next generation of material movement?</h1>
-      <p>A short diagnostic on the ideas driving autonomous material movement, and the way you think about putting it to work.</p>
-      <div class="meta">13 questions &nbsp;·&nbsp; One Flow Profile</div>
-      <button class="cta" id="startBtn">Start &rarr;</button>
+      <h1>Which automation mind are you?</h1>
+      <p>Answer 12 quick questions to reveal your automation persona, and claim the tag that comes with it.</p>
+      <div class="meta">12 quick taps &nbsp;·&nbsp; Walk away with your badge</div>
+      <button class="cta" id="startBtn"><span class="cta-slot"><span class="cta-sizer" aria-hidden="true">Reveal my persona &rarr;&nbsp;</span><span class="cta-live"><span id="ctaTyped"></span><span class="caret" id="ctaCaret">|</span></span></span></button>
     </div>
 
     <!-- DIVIDER -->
     <div class="divider" id="dividerView">
       <div class="dk">Part Two</div>
       <h2>The industry is moving.<br>Where do you fit in?</h2>
-      <button class="cta" id="dividerBtn">Continue &rarr;</button>
+      <button class="cta" id="dividerBtn">Continue <span class="nav-arrow">&rarr;</span></button>
     </div>
 
     <!-- QUIZ -->
@@ -158,29 +168,37 @@
       <div class="p-title" id="pTitle"></div>
       <div class="p-text" id="pText"></div>
       <div class="tagwrap">
-        <div>
-          <div class="tag front">
-            <span class="hole"></span>
-            <div class="glyph" id="pGlyph">🎯</div>
-            <div class="lbl">Automation Persona</div>
-            <div class="ttl" id="tTitle"></div>
+        <div class="tag-img-wrap">
+          <!-- PERSONA IMAGE PLACEHOLDER - replace src below with your image URL per persona -->
+          <!-- IMAGE SOURCES: Update these URLs for each persona -->
+          <!-- EVALUATOR: https://your-cdn.com/evaluator.png -->
+          <!-- ADOPTER: https://your-cdn.com/adopter.png -->
+          <!-- ARCHITECT: https://your-cdn.com/architect.png -->
+          <!-- ORCHESTRATOR: https://your-cdn.com/orchestrator.png -->
+          <img class="tag-img" id="personaImg" src="" alt="Persona badge">
+          <!-- FALLBACK: original card design if image fails to load -->
+          <div class="tag-fallback" id="tagFallback" style="display:none">
+            <div class="tag front">
+              <span class="hole"></span>
+              <div class="glyph" id="pGlyph">🎯</div>
+              <div class="lbl">Automation Persona</div>
+              <div class="ttl" id="tTitle"></div>
+            </div>
           </div>
-          <div class="side">Front</div>
-        </div>
-        <div>
-          <div class="tag back">
-            <span class="hole"></span>
-            <div class="co">ANSCER</div>
-            <div class="rob">ROBOTICS</div>
-            <div class="ln"></div>
-            <div class="tl">Autonomous mobile robots and AGVs for end to end material movement.</div>
-            <div class="foot2">Material Movement Redefined</div>
-          </div>
-          <div class="side">Back</div>
         </div>
       </div>
+
+      <div class="reward" id="rewardBox">
+        <div class="reward-lbl">You've earned</div>
+        <div class="reward-val" id="rewardVal"></div>
+      </div>
+
+      <div class="skubox">
+        <div class="sku-lbl">Show this code to the ANSCER team to collect</div>
+        <div class="sku-code" id="skuCode">----</div>
+      </div>
+
       <div class="r-actions">
-        <button class="btn" id="shareBtn">Copy my profile</button>
         <button class="btn ghost" id="restartBtn">Start over</button>
       </div>
     </div>
@@ -243,7 +261,7 @@ const QUESTIONS = [
       body:["Automation alone is 3.0. Connectivity and data exchange between systems are what make it 4.0.",
             "The leap isn't more machines. It's machines that talk to each other."] } },
 
-  { type:"concept", stage:"Knowing the Difference", correct:1,
+  { type:"concept", stage:"Knowing the Difference", correct:1, personaOnCorrect:"ADOPTER",
     q:"\u201CProcess automation\u201D can mean very different things. Which of these describes physical material-movement automation, not RPA?",
     opts:["Software bots entering data across systems",
           "AMR transporting goods between points on the floor",
@@ -253,27 +271,29 @@ const QUESTIONS = [
       body:["RPA automates digital tasks, data, documents, transactions. Material-movement automation moves physical goods.",
             "Both are \u201Cautomation,\u201D but only one changes how material actually flows through your operation."] } },
 
-  { type:"concept", stage:"The Connected Factory", correct:1,
+  { type:"concept", stage:"The Connected Factory", correct:1, personaOnCorrect:"ORCHESTRATOR",
     q:"A digital twin is best understood as:",
     opts:["A detailed 3D model of the facility","A live replica fed by real-time data","A KPI dashboard","A database backup"],
     reveal:{ h:"A live replica fed by real-time data",
       body:["The live data link is the definition. A 3D model without it is just a model.",
             "A true twin mirrors the operation as it runs, so you can simulate and predict."] } },
 
-  { type:"concept", stage:"Intelligent Flow", correct:1,
+  { type:"concept", stage:"Intelligent Flow", correct:1, personaOnCorrect:"ARCHITECT",
     q:"Automating a single fast workstation in isolation usually:",
     opts:["Eliminates the bottleneck","Shifts the bottleneck elsewhere","Doubles throughput","Reduces safety"],
     reveal:{ h:"Shifts the bottleneck elsewhere",
       body:["Flow is a system, not a sum of parts. Speeding up one station relocates the constraint downstream.",
             "In a balanced system, the gain comes from the whole flow, not one station."] } },
 
-  { type:"profile", stage:"About You", dividerBefore:true,
+  { type:"profile", stage:"About You", dividerBefore:true, slot:"sector",
     q:"Which sectors do you work across?",
-    opts:["Automotive","Electronics / Electrical","FMCG / Consumer Goods","Pharma / Healthcare","Warehousing / 3PL","Industrial Manufacturing","Other"] },
+    opts:["Automotive","Electronics / Electrical","FMCG / Consumer Goods","Pharma / Healthcare","Warehousing / 3PL","Industrial Manufacturing","Other"],
+    codes:["A","E","F","P","3","I","O"] },
 
-  { type:"profile", stage:"About You",
+  { type:"profile", stage:"About You", slot:"familiarity",
     q:"How familiar are you with AMR-based material movement?",
-    opts:["New to the concept","Familiar with the basics","Exploring use cases","Evaluating solutions","Work with AMRs directly"] },
+    opts:["New to the concept","Familiar with the basics","Exploring use cases","Evaluating solutions","Work with AMRs directly"],
+    codes:["1","2","3","4","5"] },
 
   { type:"persona", stage:"How You Think",
     q:"When an expert assesses an automation opportunity, what do they focus on first?",
@@ -289,16 +309,22 @@ const QUESTIONS = [
     q:"What is the most common reason automation stalls?",
     opts:["The wrong priority was chosen","It worked in a pilot but not in practice","It couldn't scale beyond the first use case","It stayed a silo and never connected"],
     map:["EVALUATOR","ADOPTER","ARCHITECT","ORCHESTRATOR"] },
-
-  { type:"profile", stage:"About You",
-    q:"To automate material movement first, what would a seasoned automation expert target?",
-    opts:["Inbound unloading and putaway","Feeding parts to the production line (line-side delivery)","Moving work-in-progress between process steps","Finished goods to dispatch and loading","The longest, most repetitive manual route"] },
 ];
 
 /* ==================== ENGINE ==================== */
 const scored = QUESTIONS.filter(q=>q.type==="stat"||q.type==="concept").length;
 let idx=0, correctCount=0, answered=false;
+let order=[];         // displayed position -> original option index (reshuffled per question)
+let navArrow=null;    // the animated arrow on the current Part 2 / reveal button
+const selection=[];   // chosen ORIGINAL option index per question; Part 2 answers stay changeable
+function shuffled(n){
+  const a=Array.from({length:n},(_,k)=>k);
+  for(let k=a.length-1;k>0;k--){ const j=Math.floor(Math.random()*(k+1)); [a[k],a[j]]=[a[j],a[k]]; }
+  return a;
+}
 const personaTally={EVALUATOR:0,ADOPTER:0,ARCHITECT:0,ORCHESTRATOR:0};
+const profileCodes={sector:"O", familiarity:"1"};   // defaults, overwritten from selection
+const PERSONA_DIGIT={EVALUATOR:"1",ADOPTER:"2",ARCHITECT:"3",ORCHESTRATOR:"4"};
 
 const track=document.getElementById("track");
 const counter=document.getElementById("counter");
@@ -338,30 +364,42 @@ function render(){
   revealEl.classList.remove("show");
   revealEl.innerHTML="";
   nextBtn.disabled=true;
-  nextBtn.textContent = idx===QUESTIONS.length-1 ? "See my profile" : "Continue";
+  const last = idx===QUESTIONS.length-1;
+  const part2 = (item.type==="profile"||item.type==="persona");
+  nextBtn.classList.toggle("reveal-cta", last);
+  nextBtn.parentElement.classList.toggle("final", last);
+  if(last){ nextBtn.innerHTML='Reveal my persona <span class="nav-arrow">\u2192</span>'; }
+  else if(part2){ nextBtn.innerHTML='Continue <span class="nav-arrow">\u2192</span>'; }
+  else { nextBtn.textContent='Continue'; }
+  navArrow = nextBtn.querySelector(".nav-arrow");
+  nextBtn.style.display = last ? "none" : "";   // last: appears only after a choice
   optsEl.innerHTML="";
-  item.opts.forEach((txt,i)=>{
+  const shuffle = (item.type==="stat"||item.type==="concept");   // Part 1 only
+  order = shuffle ? shuffled(item.opts.length) : item.opts.map((_,k)=>k);
+  order.forEach((o,d)=>{                 // d = displayed position, o = original index
     const b=document.createElement("button");
     b.className="opt";
-    b.innerHTML='<span class="mk">'+LETTERS[i]+'</span><span>'+txt+'</span>';
-    b.onclick=()=>choose(i,b);
+    b.innerHTML='<span class="mk">'+LETTERS[d]+'</span><span>'+item.opts[o]+'</span>';
+    b.onclick=()=>choose(o,b);
     optsEl.appendChild(b);
   });
 }
 
 function choose(i,btn){
-  if(answered) return;
-  answered=true;
   const item=QUESTIONS[idx];
   const buttons=[...optsEl.children];
-  buttons.forEach(b=>b.classList.add("locked"));
 
   if(item.type==="stat"||item.type==="concept"){
-    if(i===item.correct){ correctCount++; btn.classList.add("correct"); btn.querySelector(".mk").textContent="\u2713"; }
+    if(answered) return;              // knowledge locks once answered (reveal is shown)
+    answered=true;
+    selection[idx]=i;
+    buttons.forEach(b=>b.classList.add("locked"));
+    if(i===item.correct){ btn.classList.add("correct"); btn.querySelector(".mk").textContent="\u2713"; }
     else{
       btn.classList.add("wrong"); btn.querySelector(".mk").textContent="\u2715";
-      buttons[item.correct].classList.add("correct");
-      buttons[item.correct].querySelector(".mk").textContent="\u2713";
+      const cd=order.indexOf(item.correct);            // displayed position of the correct option
+      buttons[cd].classList.add("correct");
+      buttons[cd].querySelector(".mk").textContent="\u2713";
     }
     const r=item.reveal;
     let html='<div class="rh">'+r.h+'</div>';
@@ -370,10 +408,17 @@ function choose(i,btn){
     revealEl.innerHTML=html;
     revealEl.classList.add("show");
   } else {
-    btn.classList.add("chosen"); btn.querySelector(".mk").textContent="\u2713";
-    if(item.type==="persona") personaTally[item.map[i]]++;
+    // Part 2 (profile + persona): re-selectable until Continue
+    selection[idx]=i;
+    buttons.forEach((b,d)=>{
+      const on=(order[d]===i);
+      b.classList.toggle("chosen",on);
+      b.querySelector(".mk").textContent = on ? "\u2713" : LETTERS[d];
+    });
+    answered=true;
   }
   track.children[idx].classList.add("done");
+  nextBtn.style.display="";
   nextBtn.disabled=false;
 }
 
@@ -393,38 +438,122 @@ function pickPersona(){
   });
   // no persona answers at all -> default Evaluator
   if(!best || Object.values(personaTally).every(v=>v===0)) best="EVALUATOR";
-  return PERSONAS[best];
+  return Object.assign({key:best}, PERSONAS[best]);
+}
+
+function computeReward(){
+  // reward tiers by number of correct knowledge answers (out of 7)
+  // 6-7 correct -> Hamper (H) ; 4-5 correct -> Pen (P) ; 0-3 -> Badge only (B)
+  if(correctCount>=6) return {code:"H", label:"Your persona badge + a hamper"};
+  if(correctCount>=4) return {code:"P", label:"Your persona badge + a pen"};
+  return {code:"B", label:"Your persona badge"};
+}
+
+function tallyFromSelections(){
+  correctCount=0;
+  Object.keys(personaTally).forEach(k=>personaTally[k]=0);
+  profileCodes.sector="O"; profileCodes.familiarity="1";
+  QUESTIONS.forEach((q,qi)=>{
+    const sel=selection[qi];
+    if(q.type==="stat"||q.type==="concept"){
+      if(sel===q.correct){ correctCount++; if(q.personaOnCorrect) personaTally[q.personaOnCorrect]++; }
+    } else if(q.type==="persona"){
+      if(sel!=null) personaTally[q.map[sel]]++;
+    } else if(q.type==="profile" && q.slot){
+      if(sel!=null) profileCodes[q.slot]=q.codes[sel];
+    }
+  });
 }
 
 function showResult(){
+  tallyFromSelections();
   const p=pickPersona();
   document.getElementById("pTitle").textContent=p.title;
   document.getElementById("pText").textContent=p.text;
   document.getElementById("tTitle").textContent=p.title;
   document.getElementById("pGlyph").textContent=p.glyph;
+
+  const reward=computeReward();
+  // SKU = winner + sector + familiarity + persona   (4 chars)
+  const sku=(reward.code + profileCodes.sector + profileCodes.familiarity + PERSONA_DIGIT[p.key]).toUpperCase();
+  document.getElementById("rewardVal").textContent=reward.label;
+  document.getElementById("skuCode").textContent=sku;
+
+  // Set persona image URL based on persona key
+  // UPDATE THESE IMAGE URLS FOR EACH PERSONA:
+  const imageMap={
+    EVALUATOR:"https://wb.anscer.com/pratical_adopter.jpg",
+    ADOPTER:"https://wb.anscer.com/pratical_adopter.jpg",
+    ARCHITECT:"https://wb.anscer.com/pratical_adopter.jpg",
+    ORCHESTRATOR:"https://wb.anscer.com/pratical_adopter.jpg"
+  };
+  const personaImg=document.getElementById("personaImg");
+  const tagFallback=document.getElementById("tagFallback");
+  const url=imageMap[p.key];
+  if(url){
+    personaImg.src=url;
+    personaImg.onload=()=>{ personaImg.style.display="block"; tagFallback.style.display="none"; };
+    personaImg.onerror=()=>{ personaImg.style.display="none"; tagFallback.style.display="flex"; };
+    personaImg.style.display="block";
+    tagFallback.style.display="none";
+  } else {
+    personaImg.style.display="none";
+    tagFallback.style.display="flex";
+  }
+  
   quizView.style.display="none";
   resultView.style.display="flex";
   counter.textContent="Result";
-
-  const shareBtn=document.getElementById("shareBtn");
-  shareBtn.textContent="Copy my profile";
-  shareBtn.onclick=()=>{
-    const txt="My Automation Persona is "+p.title+" — from ANSCER's Autonomous Flow Index.";
-    navigator.clipboard?.writeText(txt).then(
-      ()=>{shareBtn.textContent="Copied \u2713";setTimeout(()=>shareBtn.textContent="Copy my profile",1600);},
-      ()=>{shareBtn.textContent="Copy failed";setTimeout(()=>shareBtn.textContent="Copy my profile",1600);}
-    );
-  };
 }
 
 document.getElementById("restartBtn").onclick=()=>{
   idx=0;correctCount=0;answered=false;
+  selection.length=0;
   Object.keys(personaTally).forEach(k=>personaTally[k]=0);
+  profileCodes.sector="O"; profileCodes.familiarity="1";
   [...track.children].forEach(s=>s.classList.remove("done"));
   resultView.style.display="none";
   counter.textContent="Flow Index";
   introView.style.display="flex";
 };
+
+/* ---- typewriter animation on the intro CTA (runs regardless of OS reduce-motion, for booth use) ---- */
+(function(){
+  var typedEl=document.getElementById("ctaTyped");
+  var caretEl=document.getElementById("ctaCaret");
+  if(!typedEl) return;
+  var FULL="Reveal my persona \u2192";
+  // caret blink driven in JS so it works even when the OS disables CSS animations
+  if(caretEl){ setInterval(function(){ caretEl.style.opacity = (caretEl.style.opacity==="0"?"1":"0"); },540); }
+  var i=0, dir=1;
+  function tick(){
+    typedEl.textContent=FULL.slice(0,i);
+    if(dir>0){
+      i++;
+      if(i>FULL.length){ dir=-1; setTimeout(tick,2600); return; }   // hold when full
+      setTimeout(tick,62);
+    } else {
+      i--;
+      if(i<0){ i=0; dir=1; setTimeout(tick,650); return; }          // pause, then retype
+      setTimeout(tick,26);                                          // erase faster
+    }
+  }
+  tick();
+})();
+
+/* ---- typewriter-style arrow on Continue / reveal buttons ---- */
+(function(){
+  var seq=[["",130],["\u2013",130],["\u2192",1500],["\u2013",90],["",520]];  // '' -> – -> → hold -> erase
+  var i=0;
+  function step(){
+    var f=seq[i];
+    var arrows=document.querySelectorAll(".nav-arrow");
+    for(var k=0;k<arrows.length;k++) arrows[k].textContent=f[0];
+    i=(i+1)%seq.length;
+    setTimeout(step,f[1]);
+  }
+  step();
+})();
 </script>
 </body>
 </html>
