@@ -114,13 +114,61 @@
   .tag.front .lbl{font-size:10px;font-weight:700;letter-spacing:.22em;color:#bfe0fb;text-transform:uppercase}
   .tag.front .ttl{font-size:20px;font-weight:900;line-height:1.12;margin-top:6px}
 
-  .r-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px}
+  .btn-skip{font-family:inherit;font-weight:600;font-size:13px;letter-spacing:.02em;border:1px solid var(--blue);background:transparent;color:var(--blue);border-radius:10px;padding:12px 28px;cursor:pointer;margin-top:12px;transition:all .15s}
+  .btn-skip:hover{background:var(--blue);color:#fff}
+  .btn-skip:active{transform:scale(.96)}
   .reward{margin:4px auto 4px;text-align:center}
   .reward-lbl{font-size:11px;font-weight:800;letter-spacing:.2em;color:var(--blue);text-transform:uppercase}
   .reward-val{font-size:clamp(19px,2.4vw,24px);font-weight:900;color:var(--navy);margin-top:4px}
-  .skubox{margin:18px auto 20px;max-width:360px;background:var(--navy);border-radius:16px;padding:18px 22px;color:#fff;box-shadow:0 14px 30px rgba(0,32,96,.28)}
-  .sku-lbl{font-size:11px;font-weight:700;letter-spacing:.06em;color:#bfe0fb;text-transform:uppercase}
-  .sku-code{font-size:clamp(34px,7vw,46px);font-weight:900;letter-spacing:.28em;margin-top:6px;padding-left:.28em}
+  /* Badge Preview Section */
+  .badge-preview{margin:24px 0;text-align:center}
+  .tagwrap{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin:0 0 16px}
+  .tag-img-wrap{position:relative;max-width:100%;width:100%;display:flex;align-items:center;justify-content:center}
+  .tag-img{max-width:500px;width:100%;height:auto;border-radius:16px;box-shadow:0 14px 30px rgba(0,32,96,.28),0 0 40px rgba(0,112,192,.15);filter:drop-shadow(0 0 20px rgba(0,112,192,.2));transition:transform .3s ease}
+  .tag-img:hover{transform:scale(1.02)}
+  .tag{width:100%;max-width:500px;height:auto;border-radius:18px;position:relative;overflow:hidden;box-shadow:0 14px 30px rgba(0,32,96,.28),0 0 40px rgba(0,112,192,.15);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px 20px}
+  .tag .hole{position:absolute;top:14px;left:50%;transform:translateX(-50%);width:26px;height:10px;border-radius:99px;background:rgba(255,255,255,.5);box-shadow:inset 0 1px 2px rgba(0,0,0,.25)}
+  .tag.front{background:radial-gradient(circle at 50% 28%,var(--blue-lt),var(--navy));color:#fff}
+  .tag.front .glyph{font-size:40px;margin-bottom:10px;filter:drop-shadow(0 3px 6px rgba(0,0,0,.3))}
+  .tag.front .lbl{font-size:10px;font-weight:700;letter-spacing:.22em;color:#bfe0fb;text-transform:uppercase}
+  .tag.front .ttl{font-size:20px;font-weight:900;line-height:1.12;margin-top:6px}
+  .badge-label{font-size:13px;font-weight:600;color:var(--navy);letter-spacing:.02em;margin-top:12px}
+  
+  /* Reward Callout */
+  .reward-callout{font-size:18px;font-weight:900;color:var(--navy);text-align:center;margin:18px 0 24px;letter-spacing:.02em;animation:pulse 2s ease-in-out infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.8}}
+  
+  /* Unlock Button */
+  .btn-unlock{font-size:16px;font-weight:800;padding:18px 52px;margin:0;background:var(--navy);color:#fff;border:none;border-radius:16px;cursor:pointer;transition:all .2s;box-shadow:0 8px 20px rgba(0,32,96,.25);text-transform:uppercase;letter-spacing:.03em}
+  .btn-unlock:hover{background:var(--blue);transform:translateY(-2px);box-shadow:0 12px 28px rgba(0,32,96,.35)}
+  .btn-unlock:active{transform:translateY(0);box-shadow:0 4px 12px rgba(0,32,96,.2)}
+  
+  /* Modal Styles */
+  .modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:1000}
+  .modal-content{background:#fff;border-radius:24px;padding:36px 28px;max-width:600px;width:90%;box-shadow:0 25px 70px rgba(0,32,96,.35);position:relative;animation:popIn .35s cubic-bezier(.34,.51,.74,1.56)}
+  .modal-close{position:absolute;top:16px;right:16px;background:none;border:none;font-size:32px;color:var(--navy);cursor:pointer;width:40px;height:40px;display:flex;align-items:center;justify-content:center;transition:color .2s}
+  .modal-close:hover{color:var(--blue)}
+  
+  .modal-loading{text-align:center;padding:50px 0}
+  .spinner{width:60px;height:60px;margin:0 auto 24px;border:5px solid var(--line);border-top:5px solid var(--navy);border-radius:50%;animation:spin 1.2s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .modal-loading p{font-size:15px;color:var(--navy);font-weight:700;letter-spacing:.02em}
+  
+  .modal-qr{text-align:center}
+  .modal-qr h3{font-size:20px;font-weight:900;color:var(--navy);margin:0 0 24px;letter-spacing:.02em;line-height:1.4;display:block}
+  .whatsapp-icon-img{height:48px;width:48px;display:inline-block;vertical-align:middle;margin-left:4px}
+  .qr-code-box{background:linear-gradient(135deg,#f8f9fb 0%,#f0f4f9 100%);border-radius:18px;padding:24px;margin-bottom:20px;border:2px solid var(--line)}
+  .qr-code-display{display:flex;align-items:center;justify-content:center;min-height:360px}
+  .qr-code-display img{max-width:320px;height:auto;border-radius:12px;box-shadow:0 8px 20px rgba(0,32,96,.15)}
+  
+  .sku-display{margin:18px 0;padding:16px;background:var(--navy);border-radius:12px;color:#fff}
+  .sku-label{font-size:11px;font-weight:800;letter-spacing:.15em;text-transform:uppercase;color:#bfe0fb;margin:0 0 8px}
+  .sku-code{font-size:24px;font-weight:900;letter-spacing:.08em;margin:0;color:#fff}
+  
+  .qr-instruction{font-size:13px;color:var(--ink);line-height:1.8;margin:16px 0 0}
+  .qr-instruction-red{color:#d32f2f;font-weight:700}
+  
+  @keyframes popIn{from{opacity:0;transform:scale(.92) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
   .signoff{text-align:center;padding:14px;font-size:11px;letter-spacing:.22em;font-weight:800;color:var(--blue-mid);text-transform:uppercase;border-top:1px solid var(--line)}
 
   @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
@@ -142,6 +190,7 @@
       <p>Answer 12 quick questions to reveal your automation persona, and claim the tag that comes with it.</p>
       <div class="meta">12 quick taps &nbsp;·&nbsp; Walk away with your badge</div>
       <button class="cta" id="startBtn"><span class="cta-slot"><span class="cta-sizer" aria-hidden="true">Reveal my persona &rarr;&nbsp;</span><span class="cta-live"><span id="ctaTyped"></span><span class="caret" id="ctaCaret">|</span></span></span></button>
+      <button class="btn-skip" id="skipBtn">Skip to last question</button>
     </div>
 
     <!-- DIVIDER -->
@@ -167,35 +216,57 @@
       <div class="rk">Your Flow Profile</div>
       <div class="p-title" id="pTitle"></div>
       <div class="p-text" id="pText"></div>
-      <div class="tagwrap">
-        <div class="tag-img-wrap">
-          <!-- PERSONA IMAGE PLACEHOLDER - replace src below with your image URL per persona -->
-          <!-- IMAGE SOURCES: Update these URLs for each persona -->
-          <!-- EVALUATOR: https://your-cdn.com/evaluator.png -->
-          <!-- ADOPTER: https://your-cdn.com/adopter.png -->
-          <!-- ARCHITECT: https://your-cdn.com/architect.png -->
-          <!-- ORCHESTRATOR: https://your-cdn.com/orchestrator.png -->
-          <img class="tag-img" id="personaImg" src="" alt="Persona badge">
-          <!-- FALLBACK: original card design if image fails to load -->
-          <div class="tag-fallback" id="tagFallback" style="display:none">
-            <div class="tag front">
-              <span class="hole"></span>
-              <div class="glyph" id="pGlyph">🎯</div>
-              <div class="lbl">Automation Persona</div>
-              <div class="ttl" id="tTitle"></div>
-            </div>
-          </div>
-        </div>
-      </div>
 
       <div class="reward" id="rewardBox">
-        <div class="reward-lbl">You've earned</div>
+        <div class="reward-lbl">🎉 You've Won</div>
         <div class="reward-val" id="rewardVal"></div>
       </div>
 
-      <div class="skubox">
-        <div class="sku-lbl">Show this code to the ANSCER team to collect</div>
-        <div class="sku-code" id="skuCode">----</div>
+      <div class="badge-preview">
+        <div class="tagwrap">
+          <div class="tag-img-wrap">
+            <img class="tag-img" id="personaImg" src="" alt="Persona badge">
+            <div class="tag-fallback" id="tagFallback" style="display:none">
+              <div class="tag front">
+                <span class="hole"></span>
+                <div class="glyph" id="pGlyph">🎯</div>
+                <div class="lbl">Automation Persona</div>
+                <div class="ttl" id="tTitle"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="badge-label">Your <span id="badgePersonaName"></span> Badge</div>
+      </div>
+
+      <div class="reward-callout" id="rewardCallout">
+        🎉 You've Won a Reward!
+      </div>
+
+      <button class="btn btn-unlock" id="claimBtn"></button>
+
+      <!-- Claim Modal Popup -->
+      <div class="modal-overlay" id="claimModal" style="display:none">
+        <div class="modal-content">
+          <button class="modal-close" id="modalClose">&times;</button>
+          
+          <div class="modal-loading" id="modalLoading">
+            <div class="spinner"></div>
+            <p>Connecting to the system...</p>
+          </div>
+          
+          <div class="modal-qr" id="modalQr" style="display:none">
+            <h3>Experience Live Automation. Collect your reward.<br>Scan the QR code and Summon the robot via <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original" alt="WhatsApp" class="whatsapp-icon-img"></h3>
+            <div class="qr-code-box">
+              <div id="qrCanvas" class="qr-code-display"></div>
+            </div>
+            <div class="sku-display">
+              <p class="sku-label">Prefer offline? Show this code at the booth</p>
+              <p class="sku-code" id="skuDisplay"></p>
+            </div>
+            <p class="qr-instruction qr-instruction-red">Scan now to watch the automation live. Codes shared at the booth still work!</p>
+          </div>
+        </div>
       </div>
 
       <div class="r-actions">
@@ -342,6 +413,13 @@ const LETTERS=["A","B","C","D","E","F","G"];
 QUESTIONS.forEach(()=>{const s=document.createElement("div");s.className="seg";s.innerHTML="<i></i>";track.appendChild(s);});
 
 document.getElementById("startBtn").onclick=()=>{introView.style.display="none";maybeDivider();};
+
+document.getElementById("skipBtn").onclick=()=>{
+  idx=QUESTIONS.length-1;
+  introView.style.display="none";
+  quizView.style.display="flex";
+  render();
+};
 document.getElementById("dividerBtn").onclick=()=>{dividerView.style.display="none";quizView.style.display="flex";render();};
 
 function maybeDivider(){
@@ -477,7 +555,6 @@ function showResult(){
   // SKU = winner + sector + familiarity + persona   (4 chars)
   const sku=(reward.code + profileCodes.sector + profileCodes.familiarity + PERSONA_DIGIT[p.key]).toUpperCase();
   document.getElementById("rewardVal").textContent=reward.label;
-  document.getElementById("skuCode").textContent=sku;
 
   // Set persona image URL based on persona key
   // UPDATE THESE IMAGE URLS FOR EACH PERSONA:
@@ -500,6 +577,67 @@ function showResult(){
     personaImg.style.display="none";
     tagFallback.style.display="flex";
   }
+  
+  // Claim button: open modal with loading, then show QR
+  const claimBtn=document.getElementById("claimBtn");
+  const claimModal=document.getElementById("claimModal");
+  const modalLoading=document.getElementById("modalLoading");
+  const modalQr=document.getElementById("modalQr");
+  const modalClose=document.getElementById("modalClose");
+  
+  // Set badge label with persona name
+  document.getElementById("badgePersonaName").textContent=p.title;
+  
+  // Set reward callout visibility
+  const rewardCallout=document.getElementById("rewardCallout");
+  if(correctCount<4){
+    rewardCallout.style.display="none";
+  }
+  
+  // Set dynamic button text based on reward
+  if(correctCount>=4){
+    claimBtn.textContent="Click to Collect Badge & Reward";
+  } else {
+    claimBtn.textContent="Click to Collect Badge";
+  }
+  
+  claimBtn.onclick=()=>{
+    claimModal.style.display="flex";
+    modalLoading.style.display="block";
+    modalQr.style.display="none";
+    
+    // Simulate processing (0.8s), then show QR
+    setTimeout(()=>{
+      // Generate QR code with WhatsApp URL
+      const waMsg="Hi%20ANSCER%20Team!%20I%20completed%20the%20Persona%20Test.%20SKU:%20"+sku;
+      const waUrl="https://wa.me/919980707237?text="+waMsg;
+      
+      // Generate QR code using qrserver API
+      const qrContainer=document.getElementById("qrCanvas");
+      const qrUrl="https://api.qrserver.com/v1/create-qr-code/?size=400x400&data="+encodeURIComponent(waUrl);
+      const img=document.createElement("img");
+      img.src=qrUrl;
+      img.style.maxWidth="320px";
+      img.style.height="auto";
+      qrContainer.innerHTML="";
+      qrContainer.appendChild(img);
+      
+      // Display SKU in the modal
+      document.getElementById("skuDisplay").textContent=sku;
+      
+      // Hide loading, show QR
+      modalLoading.style.display="none";
+      modalQr.style.display="block";
+    }, 800);
+  };
+  
+  modalClose.onclick=()=>{
+    claimModal.style.display="none";
+  };
+  
+  claimModal.onclick=(e)=>{
+    if(e.target===claimModal) claimModal.style.display="none";
+  };
   
   quizView.style.display="none";
   resultView.style.display="flex";
