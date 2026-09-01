@@ -4,6 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ANSCER Flow Index">
+<meta name="theme-color" content="#002060">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.json">
 <title>ANSCER | The Autonomous Flow Index</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -31,8 +36,6 @@
     display:flex;flex-direction:column;flex:1;min-height:100dvh}
 
   .topbar{display:flex;align-items:center;justify-content:space-between;padding:15px 22px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,#fff,#fbfcfe)}
-  .btn-fullscreen{background:none;border:none;font-size:20px;color:var(--navy);cursor:pointer;padding:8px 12px;transition:color .2s}
-  .btn-fullscreen:hover{color:var(--blue)}
   .brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.14em;font-size:12.5px;color:var(--navy)}
   .brand .dot{width:9px;height:9px;border-radius:50%;background:var(--blue);box-shadow:0 0 0 4px rgba(0,112,192,.16)}
   .counter{font-size:12px;font-weight:700;color:var(--blue-mid);letter-spacing:.06em}
@@ -182,7 +185,6 @@
     <div class="topbar">
       <div class="brand"><span class="dot"></span>ANSCER ROBOTICS</div>
       <div class="counter" id="counter">Flow Index</div>
-      <button class="btn-fullscreen" id="fullscreenBtn" title="Toggle fullscreen">⛶</button>
     </div>
     <div class="track" id="track"></div>
 
@@ -695,20 +697,6 @@ document.getElementById("restartBtn").onclick=()=>{
   }
   step();
 })();
-
-/* ---- Fullscreen Toggle ---- */
-const fullscreenBtn=document.getElementById("fullscreenBtn");
-const appContainer=document.querySelector(".app");
-
-fullscreenBtn.addEventListener("click",()=>{
-  if(!document.fullscreenElement){
-    appContainer.requestFullscreen().catch(err=>{
-      console.log("Fullscreen request failed:",err);
-    });
-  } else {
-    document.exitFullscreen();
-  }
-});
 </script>
 </body>
 </html>
