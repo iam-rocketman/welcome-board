@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="ANSCER Flow Index">
 <meta name="theme-color" content="#002060">
 <meta name="mobile-web-app-capable" content="yes">
-<link rel="manifest" href="https://wb.anscer.com/manifest.json">
+<link rel="manifest" href="manifest.json">
 <title>ANSCER | The Autonomous Flow Index</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -36,6 +36,8 @@
     display:flex;flex-direction:column;flex:1;min-height:100dvh}
 
   .topbar{display:flex;align-items:center;justify-content:space-between;padding:15px 22px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,#fff,#fbfcfe)}
+  .btn-reset{background:none;border:none;font-size:13px;font-weight:700;color:var(--blue);cursor:pointer;padding:8px 12px;letter-spacing:.05em;transition:color .2s;text-transform:uppercase}
+  .btn-reset:hover{color:var(--navy)}
   .brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:.14em;font-size:12.5px;color:var(--navy)}
   .brand .dot{width:9px;height:9px;border-radius:50%;background:var(--blue);box-shadow:0 0 0 4px rgba(0,112,192,.16)}
   .counter{font-size:12px;font-weight:700;color:var(--blue-mid);letter-spacing:.06em}
@@ -46,17 +48,19 @@
   .seg.done > i{width:100%}
 
   /* INTRO */
-  .intro{padding:48px 40px;text-align:center;display:flex;flex:1;flex-direction:column;align-items:center;justify-content:center}
-  .intro .kick{font-size:12px;font-weight:800;letter-spacing:.26em;color:var(--blue);text-transform:uppercase}
-  .intro h1{font-size:clamp(30px,5vw,46px);font-weight:900;color:var(--navy);line-height:1.05;margin:14px 0 16px;letter-spacing:-.01em;max-width:640px}
-  .intro p{font-size:clamp(16px,1.9vw,19px);line-height:1.6;color:#41506a;max-width:520px;margin:0 auto 6px}
-  .intro .meta{font-size:14px;font-weight:700;color:var(--blue-mid);letter-spacing:.04em;margin:22px 0 28px}
-  .cta{font-family:inherit;font-weight:800;font-size:16px;letter-spacing:.03em;border:none;border-radius:13px;padding:17px 44px;cursor:pointer;background:var(--navy);color:#fff;transition:background .15s,transform .06s;white-space:nowrap}
+  .intro{padding:48px 40px;text-align:center;display:flex;flex:1;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(135deg,rgba(0,112,192,.05) 0%,rgba(0,32,96,.08) 100%)}
+  .intro .hero-header{font-size:clamp(40px,8vw,72px);font-weight:900;color:var(--navy);line-height:1.1;margin:0 0 12px;letter-spacing:-.02em;max-width:800px;text-shadow:0 2px 4px rgba(0,32,96,.1)}
+  .intro .kick{font-size:13px;font-weight:800;letter-spacing:.26em;color:var(--blue);text-transform:uppercase;margin-bottom:8px}
+  .intro h1{font-size:clamp(24px,3.5vw,36px);font-weight:700;color:var(--ink);line-height:1.4;margin:12px 0 16px;letter-spacing:-.005em;max-width:680px}
+  .intro p{font-size:clamp(15px,1.8vw,18px);line-height:1.6;color:#41506a;max-width:580px;margin:0 auto 8px}
+  .intro .meta{font-size:15px;font-weight:700;color:var(--blue-mid);letter-spacing:.04em;margin:26px 0 32px}
+  .cta{font-family:inherit;font-weight:800;font-size:17px;letter-spacing:.03em;border:none;border-radius:16px;padding:18px 52px;cursor:pointer;background:var(--navy);color:#fff;transition:all .15s;white-space:nowrap;box-shadow:0 8px 24px rgba(0,32,96,.3)}
   .cta-slot{position:relative;display:inline-block}
   .cta-sizer{visibility:hidden;white-space:nowrap}
   .cta-live{position:absolute;left:0;top:0;bottom:0;white-space:nowrap;display:flex;align-items:center}
   .caret{margin-left:1px;font-weight:600}
-  .cta:hover{background:var(--blue)} .cta:active{transform:translateY(1px)}
+  .cta:hover{background:var(--blue);transform:translateY(-2px);box-shadow:0 12px 32px rgba(0,32,96,.4)} 
+  .cta:active{transform:translateY(0);box-shadow:0 4px 12px rgba(0,32,96,.2)}
   .cta:focus-visible{outline:3px solid rgba(0,112,192,.4);outline-offset:2px}
 
   /* DIVIDER */
@@ -184,18 +188,19 @@
   <div class="card">
     <div class="topbar">
       <div class="brand"><span class="dot"></span>ANSCER ROBOTICS</div>
+      <button class="btn-reset" id="resetBtn" title="Restart Quiz">↻ Reset</button>
       <div class="counter" id="counter">Flow Index</div>
     </div>
     <div class="track" id="track"></div>
 
     <!-- INTRO -->
     <div class="intro" id="introView">
+      <div class="hero-header">Discover Your Automation Persona</div>
       <div class="kick">The Autonomous Flow Index</div>
-      <h1>Which automation mind are you?</h1>
-      <p>Answer 12 quick questions to reveal your automation persona, and claim the tag that comes with it.</p>
-      <div class="meta">12 quick taps &nbsp;·&nbsp; Walk away with your badge</div>
+      <h1>Take the test to understand your industry role in the automation journey</h1>
+      <div class="meta">12 quick taps &nbsp;·&nbsp; Walk away with your badge and goodies</div>
       <button class="cta" id="startBtn"><span class="cta-slot"><span class="cta-sizer" aria-hidden="true">Reveal my persona &rarr;&nbsp;</span><span class="cta-live"><span id="ctaTyped"></span><span class="caret" id="ctaCaret">|</span></span></span></button>
-      <button class="btn-skip" id="skipBtn">Skip to last question</button>
+      <button class="btn-skip" id="skipBtn" style="display:none>Skip to last question</button>
     </div>
 
     <!-- DIVIDER -->
@@ -658,6 +663,21 @@ document.getElementById("restartBtn").onclick=()=>{
   resultView.style.display="none";
   counter.textContent="Flow Index";
   introView.style.display="flex";
+};
+
+// Reset button in topbar
+document.getElementById("resetBtn").onclick=()=>{
+  idx=0;correctCount=0;answered=false;
+  selection.length=0;
+  Object.keys(personaTally).forEach(k=>personaTally[k]=0);
+  profileCodes.sector="O"; profileCodes.familiarity="1";
+  [...track.children].forEach(s=>s.classList.remove("done"));
+  quizView.style.display="none";
+  dividerView.style.display="none";
+  resultView.style.display="none";
+  counter.textContent="Flow Index";
+  introView.style.display="flex";
+  claimModal.style.display="none";
 };
 
 /* ---- typewriter animation on the intro CTA (runs regardless of OS reduce-motion, for booth use) ---- */
