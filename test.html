@@ -200,7 +200,7 @@
       <h1>Take the test to understand your industry role in the automation journey</h1>
       <div class="meta">12 quick taps &nbsp;·&nbsp; Walk away with your badge and goodies</div>
       <button class="cta" id="startBtn"><span class="cta-slot"><span class="cta-sizer" aria-hidden="true">Reveal my persona &rarr;&nbsp;</span><span class="cta-live"><span id="ctaTyped"></span><span class="caret" id="ctaCaret">|</span></span></span></button>
-      <button class="btn-skip" id="skipBtn" style="display:none>Skip to last question</button>
+      <!-- <button class="btn-skip" id="skipBtn">Skip to last question</button> -->
     </div>
 
     <!-- DIVIDER -->
@@ -424,12 +424,13 @@ QUESTIONS.forEach(()=>{const s=document.createElement("div");s.className="seg";s
 
 document.getElementById("startBtn").onclick=()=>{introView.style.display="none";maybeDivider();};
 
-document.getElementById("skipBtn").onclick=()=>{
-  idx=QUESTIONS.length-1;
-  introView.style.display="none";
-  quizView.style.display="flex";
-  render();
-};
+// Skip button handler (commented out - button hidden)
+// document.getElementById("skipBtn").onclick=()=>{
+//   idx=QUESTIONS.length-1;
+//   introView.style.display="none";
+//   quizView.style.display="flex";
+//   render();
+// };
 document.getElementById("dividerBtn").onclick=()=>{dividerView.style.display="none";quizView.style.display="flex";render();};
 
 function maybeDivider(){
