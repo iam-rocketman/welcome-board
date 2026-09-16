@@ -261,12 +261,7 @@
      and only names are listed. Otherwise each name shows its own.
      ═══════════════════════════════════════════════════════════ */
   const visitors = [
-    { name:"Andrew Ang",     title:"", company:"SICK" },
-    { name:"Nanjunda K",     title:"", company:"SICK" },
-    { name:"Heiko Kerbs",    title:"", company:"SICK" },
-    { name:"Hariprasad",     title:"", company:"SICK" },
-    { name:"Vinod Potdar",   title:"", company:"SICK" },
-    { name:"Gopal Kumar",    title:"", company:"SICK" },
+    { name:"Shyam Coutinho", title:"", company:"Mitsui & Co. India" },
   ];
   /* ═══════════════════════════════════════════════════════════ */
 
@@ -306,8 +301,8 @@
   const useRotator = shown.length >= ROTATE_THRESHOLD;
 
   if (shared) {
-    // Template rule: "Team [Company]" for a group (2+); just the company for a solo guest.
-    greetCompany.textContent = (shown.length >= 2 ? 'Team ' : '') + companies[0];
+    // Template rule: always greet as "Team [Company]", solo guest included.
+    greetCompany.textContent = 'Team ' + companies[0];
     names.setAttribute('data-grouped','true');
     if (!useRotator) {
       shown.forEach(v => {
