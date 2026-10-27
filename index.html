@@ -261,7 +261,7 @@
      and only names are listed. Otherwise each name shows its own.
      ═══════════════════════════════════════════════════════════ */
   const visitors = [
-    { name:"Shyam Coutinho", title:"", company:"Mitsui & Co. India" },
+    { name:"Sriram", title:"", company:"KPIT" },
   ];
   /* ═══════════════════════════════════════════════════════════ */
 
@@ -291,8 +291,9 @@
   // sets the greeting word live; safe to call repeatedly (e.g. every minute)
   function updateGreeting(){
     if (shared) {
-      document.getElementById('greetWord').textContent = greetWord() + ',';
+      document.querySelector('.greeting-line').style.display = 'none';
     } else {
+      document.querySelector('.greeting-line').style.display = '';
       document.getElementById('greetWord').textContent = greetWord();
     }
   }
@@ -301,8 +302,7 @@
   const useRotator = shown.length >= ROTATE_THRESHOLD;
 
   if (shared) {
-    // Template rule: always greet as "Team [Company]", solo guest included.
-    greetCompany.textContent = 'Team ' + companies[0];
+    greetCompany.textContent = 'Welcome to Team ' + companies[0];
     names.setAttribute('data-grouped','true');
     if (!useRotator) {
       shown.forEach(v => {
